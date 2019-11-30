@@ -8,7 +8,7 @@ public class CPT {
     private char CPTof;
 
     //getters
-    public char [][] getCPT_values() {
+    public char[][] getCPT_values() {
         return this.CPT_values;
     }
 
@@ -30,14 +30,29 @@ public class CPT {
                 if(evidence[0][j] == variable)
                     return true;
             }
-            /*if(Arrays.asList(evidence[0]).contains(variable)) {
-                return true;
-            }*/
         }
         return false;
     }
 
-    public double[] copyToFactorProb;
+    public double[] copyToFactorProb() {
+        int size = this.getCPT_prob().length;
+        double[] arrCopy = new double[size];
+        for(int i=0; i<size; i++) {
+            arrCopy[i] = this.getCPT_prob()[i];
+        }
+        return arrCopy;
+    }
 
-    public char[][] copyToFactorValues;
+    public char[][] copyToFactorValues() {
+        int rowSize = this.getCPT_values().length;
+        int colSize = this.getCPT_values()[0].length;
+        char[][] tableCopy = new char[rowSize][colSize];
+        for(int i=0; i<rowSize; i++) {
+            for(int j=0; j<colSize; j++) {
+                tableCopy[i][j] = this.getCPT_values()[i][j];
+            }
+        }
+        return tableCopy;
+    }
+
 }
