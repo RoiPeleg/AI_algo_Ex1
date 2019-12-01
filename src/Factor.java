@@ -94,6 +94,12 @@ public class Factor {
         return newTable;
     }
 
+    public boolean isOneValued() {
+        if(this.factor_prob.length == 1)
+            return true;
+        return false;
+    }
+
    /* private static char[] copyTheRow(char [][] table, int row_num) {
         char [] arr = new char[table[row_num].length];
         for(int i=0; i<arr.length; i++) {
