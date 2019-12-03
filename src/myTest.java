@@ -60,7 +60,29 @@ public class myTest {
         prob = remove_value(prob,2);
 
         Factor f = new Factor(values, prob);
-        f.visualPrint();
+        //f.visualPrint();
+
+        /*Parser p = new Parser();
+        try{
+            StringBuilder sb = p.getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt");
+            String [] s =sb.toString().split("Var");
+            System.out.println(s[6]);
+            int indx = sb.indexOf("Parents:")+9;
+            System.out.println(indx);
+            String [] as = sb.substring(indx).split("CPT");
+            for(int i=0; i<as.length; i++) {
+                System.out.println(as[i]);
+            }
+            //System.out.println(sb.indexOf("CPT"));
+        }catch (Exception e){System.out.println(e.getMessage());}*/
+
+        String s = "Parents: A,B,C";
+        String[] parents = s.substring(8).split(",");
+        for(int i=0; i<parents.length; i++) {
+            System.out.println(parents[i]);
+        }
+
+
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
  */
 public class Parser {
     /**
-     * gets the input file and and sorts it
+     * gets the input file and sorts it
      * @param input input file path
      * @throws Exception
      */
@@ -29,17 +29,25 @@ public class Parser {
         reader.close();
         return contents;
     }
-    public static void toConstruct()
-    {
-        try{
-            StringBuilder sb = getInput("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input.txt");
-            String [] s =sb.toString().split("Var");
-                System.out.println(s[5]);
-        }catch (Exception e){System.out.println(e.getMessage());}
 
-
+    public void toConstruct() {
+        try {
+            StringBuilder sb = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt"); //roi : ("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input.txt")
+            //StringBuilder sb_2 = getInput("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input2.txt");
+            String [] s = sb.toString().split("Var");
+            //String [] s2 = sb.toString().split("Var");
+            for(int i=1; i<s.length;i++)
+            {
+                if(s[i].contains("Network"))continue;
+                if(s[i].contains("Queries"))continue;
+                new Node(s[i]);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
-    public static void main(String[] args) {
+
+    /*public static void main(String[] args) {
         toConstruct();
-    }
+    }*/
 }

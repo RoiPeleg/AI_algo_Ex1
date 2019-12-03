@@ -21,6 +21,33 @@ public class CPT {
     }
 
     //constructors
+    public CPT(Node var) {
+        this.CPT_values = new char[sizeOfRows(var)][sizeOfCols(var)];
+        // ....
+    }
+
+    //private methods to help us in the constructor
+
+    private int sizeOfCols(Node var) {
+        return 0;
+    }
+
+    private int sizeOfRows(Node var) {
+        return 0;
+    }
+
+    /*private int sizeOfCols(String[] s, int VarIndex) {
+        int indexToSearch = s[VarIndex].indexOf("Parents:") + 9;
+        if(s[VarIndex].substring(indexToSearch, indexToSearch+4).equals("none"))
+            return 1;
+        String[] parents = s[VarIndex].substring(indexToSearch).split("CPT")[0].split(",");
+        return parents.length+1; //number of parents + current variable
+    }*/
+
+    /*private int sizeOfRows(String[] s, int VarIndex) {
+        int num_this_values, num_parents_values;
+        return 0;
+    }*/
 
     //other methods
     public boolean containsEvidence(char[][]evidence) {
