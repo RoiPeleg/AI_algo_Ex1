@@ -36,7 +36,7 @@ public class Parser {
             //StringBuilder sb_2 = getInput("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input2.txt");
             String [] s = sb.toString().split("Var");
             //String [] s2 = sb.toString().split("Var");
-            for(int i=1; i<s.length;i++)
+            for(int i=2; i<s.length;i++)
             {
                 if(s[i].contains("Network"))continue;
                 if(s[i].contains("Queries"))continue;

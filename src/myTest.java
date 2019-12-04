@@ -62,27 +62,46 @@ public class myTest {
         Factor f = new Factor(values, prob);
         //f.visualPrint();
 
-        /*Parser p = new Parser();
+        Parser p = new Parser();
         try{
             StringBuilder sb = p.getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt");
             String [] s =sb.toString().split("Var");
-            System.out.println(s[6]);
-            int indx = sb.indexOf("Parents:")+9;
+            method(s[3]);
+            /*for(int i=2; i<s.length;i++)
+            {
+                if(s[i].contains("Network"))continue;
+                if(s[i].contains("Queries"))continue;
+                //System.out.println(s[i] + "************");
+            }*/
+            /*int indx = sb.indexOf("Parents:")+9;
             System.out.println(indx);
             String [] as = sb.substring(indx).split("CPT");
             for(int i=0; i<as.length; i++) {
                 System.out.println(as[i]);
-            }
+            }*/
             //System.out.println(sb.indexOf("CPT"));
-        }catch (Exception e){System.out.println(e.getMessage());}*/
+        }catch (Exception e){System.out.println(e.getMessage());}
 
-        String s = "Parents: A,B,C";
+        /*String s = "Parents: A,B,C";
         String[] parents = s.substring(8).split(",");
         for(int i=0; i<parents.length; i++) {
             System.out.println(parents[i]);
+        }*/
+
+    }
+
+    private static void method(String block) {
+        String[] block_rows = block.split("\n"); //split each row of string
+        System.out.println("block_rows values: "+block_rows[1]);
+        String values = "";
+        for (int i = 8; i < block_rows[1].length(); i++) {
+            values += block_rows[1].charAt(i);
+            /*String[] arr = values.split(",");
+            for (int j = 0; j < arr.length; j++) {
+                System.out.println(arr[j]);
+            }*/
         }
-
-
+        System.out.println("values String: "+values);
     }
 
 }
