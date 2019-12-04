@@ -1,4 +1,4 @@
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class CPT {
 
@@ -21,33 +21,23 @@ public class CPT {
     }
 
     //constructors
-    public CPT(Node var) {
-        this.CPT_values = new char[sizeOfRows(var)][sizeOfCols(var)];
-        // ....
+    public CPT(String block, char name, String[] values, ArrayList<NodeCollection.Node> parents) {
+        this.CPT_values = new char[sizeOfRows(values, parents)][sizeOfCols(parents)];
+        //....
     }
 
     //private methods to help us in the constructor
-
-    private int sizeOfCols(Node var) {
-        return 0;
+    private int sizeOfCols(ArrayList<NodeCollection.Node> parents) {
+        return parents.size() + 1;
     }
 
-    private int sizeOfRows(Node var) {
-        return 0;
+    private int sizeOfRows(String[] values, ArrayList<NodeCollection.Node> parents) {
+        int size = values.length;
+        for(int i=0; i<parents.size(); i++) {
+            size *= parents.get(i).getValues().length;
+        }
+        return size;
     }
-
-    /*private int sizeOfCols(String[] s, int VarIndex) {
-        int indexToSearch = s[VarIndex].indexOf("Parents:") + 9;
-        if(s[VarIndex].substring(indexToSearch, indexToSearch+4).equals("none"))
-            return 1;
-        String[] parents = s[VarIndex].substring(indexToSearch).split("CPT")[0].split(",");
-        return parents.length+1; //number of parents + current variable
-    }*/
-
-    /*private int sizeOfRows(String[] s, int VarIndex) {
-        int num_this_values, num_parents_values;
-        return 0;
-    }*/
 
     //other methods
     public boolean containsEvidence(char[][]evidence) {

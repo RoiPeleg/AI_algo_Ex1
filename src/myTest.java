@@ -96,12 +96,11 @@ public class myTest {
         String values = "";
         for (int i = 8; i < block_rows[1].length(); i++) {
             values += block_rows[1].charAt(i);
-            /*String[] arr = values.split(",");
+        }
+        String[] arr = values.split(",");
             for (int j = 0; j < arr.length; j++) {
                 System.out.println(arr[j]);
-            }*/
-        }
-        System.out.println("values String: "+values);
+            }
     }
 
 }
