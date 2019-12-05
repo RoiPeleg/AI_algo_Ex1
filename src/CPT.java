@@ -23,7 +23,13 @@ public class CPT {
     //constructors
     public CPT(String block, char name, String[] values, ArrayList<NodeCollection.Node> parents) {
         this.CPT_values = new char[sizeOfRows(values, parents)][sizeOfCols(parents)];
-        //....
+        this.CPTof = name;
+
+        //init the values in the first row (variables names)
+        CPT_values[0][0] = name;
+        for(int j=1; j<CPT_values[0].length; j++)
+            CPT_values[0][j] = parents.get(j).getName();
+        
     }
 
     //private methods to help us in the constructor

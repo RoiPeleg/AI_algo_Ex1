@@ -36,12 +36,8 @@ public class Parser {
             //StringBuilder sb_2 = getInput("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input2.txt");
             String [] s = sb.toString().split("Var");
             //String [] s2 = sb.toString().split("Var");
-            for(int i=2; i<s.length;i++)
-            {
-                if(s[i].contains("Network"))continue;
-                if(s[i].contains("Queries"))continue;
-                new Node(s[i]);
-            }
+            NodeCollection NC1 = new NodeCollection(s);
+            //NodeCollection NC2 = new NodeCollection(s2);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

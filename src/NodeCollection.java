@@ -5,7 +5,17 @@
         //to implements Bayesian Network, and easy work with Node constructor and CPT constructor.
 
         //attributes
-        public Node[] nodes;
+        public Node[] nodes = new Node[0];
+
+        //constructor
+        public NodeCollection(String[] input) {
+            for(int i=2; i<input.length; i++) {
+                if(input[i].contains("Network"))continue;
+                if(input[i].contains("Queries"))continue;
+                Node n = new Node(input[i]); //send every block to Node constructor;
+                addNode(n); //in this method we define this.nodes;
+            }
+        }
 
         //methods
         public Node convertToItsNode(char var) {
@@ -23,6 +33,7 @@
             for(int i=0; i<this.nodes.length; i++)
                 newNodes[i] = this.nodes[i];
             newNodes[newSize] = n;
+            this.nodes = newNodes;
         }
 
 
@@ -87,8 +98,6 @@
                 //init CPT
                 this.cpt = new CPT(block, this.Name, this.values, this.parents);
             }
-            //in the main program: after every Node building, we will send it to "addNode" method in NodeCollection.
-
         }
 
 
