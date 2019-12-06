@@ -45,7 +45,11 @@ public class myTest {
     }
 
     public static void main(String[] args) {
-        char[][] values = {{'E', 'B', 'A'},
+
+        Parser p = new Parser();
+        p.toConstruct();
+
+        /*char[][] values = {{'E', 'B', 'A'},
                 {'T', 'T', 'T'},
                 {'T', 'F', 'T'},
                 {'F', 'T', 'T'},
@@ -67,20 +71,20 @@ public class myTest {
             StringBuilder sb = p.getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt");
             String [] s =sb.toString().split("Var");
             method(s[3]);
-            /*for(int i=2; i<s.length;i++)
+            *//*for(int i=2; i<s.length;i++)
             {
                 if(s[i].contains("Network"))continue;
                 if(s[i].contains("Queries"))continue;
                 //System.out.println(s[i] + "************");
-            }*/
-            /*int indx = sb.indexOf("Parents:")+9;
+            }*//*
+            *//*int indx = sb.indexOf("Parents:")+9;
             System.out.println(indx);
             String [] as = sb.substring(indx).split("CPT");
             for(int i=0; i<as.length; i++) {
                 System.out.println(as[i]);
-            }*/
+            }*//*
             //System.out.println(sb.indexOf("CPT"));
-        }catch (Exception e){System.out.println(e.getMessage());}
+        }catch (Exception e){System.out.println(e.getMessage());}*/
 
         /*String s = "Parents: A,B,C";
         String[] parents = s.substring(8).split(",");
@@ -90,7 +94,7 @@ public class myTest {
 
     }
 
-    private static void method(String block) {
+    /*private static void method(String block) {
         String[] block_rows = block.split("\n"); //split each row of string
         System.out.println("block_rows values: "+block_rows[1]);
         String values = "";
@@ -101,6 +105,6 @@ public class myTest {
             for (int j = 0; j < arr.length; j++) {
                 System.out.println(arr[j]);
             }
-    }
+    }*/
 
 }

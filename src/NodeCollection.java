@@ -62,6 +62,10 @@
                 return shortValuesNames;
             }
 
+            public CPT getCpt() {
+                return cpt;
+            }
+
             //constructor
             /**
              * Constructor that gets Block and defines all the attributes of the Node
@@ -94,9 +98,8 @@
                     for(int j=0; j<arrOfParents.length; j++)
                         this.parents.add(convertToItsNode(arrOfParents[j].charAt(0)));
                 }
-
                 //init CPT
-                this.cpt = new CPT(block, this.Name, this.values, this.parents);
+                this.cpt = new CPT(block, this.Name, this.shortValuesNames, this.parents);
             }
         }
 
