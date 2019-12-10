@@ -29,7 +29,7 @@ public class NodeCollection {
         return null;
     }
 
-    public void addNode(Node n) {
+    public void addNode(Node n) { //******
         int newSize = this.nodes.length+1;
         Node[] newNodes = new Node[newSize];
         for(int i=0; i<this.nodes.length; i++)

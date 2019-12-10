@@ -40,7 +40,7 @@ public class Parser {
             //System.out.println(Arrays.toString(s2));
             //NodeCollection NC1 = new NodeCollection(s);
             NodeCollection NC2 = new NodeCollection(s2);
-            NC2.nodes[2].getCpt().visualPrint();
+            NC2.nodes[2].getCpt().visualPrint(); //for testing
         } catch (Exception e) {
             e.printStackTrace();
             //System.out.println(e.getMessage());

@@ -47,7 +47,7 @@ public class myTest {
     public static void main(String[] args) {
 
         Parser p = new Parser();
-        p.toConstruct();
+        p.toConstruct(); //Debug
 
         /*char[][] values = {{'E', 'B', 'A'},
                 {'T', 'T', 'T'},

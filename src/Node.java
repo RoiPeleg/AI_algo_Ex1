@@ -67,6 +67,6 @@ public class Node
         }
 
         //init CPT
-        this.cpt = new CPT(block, this.Name, this.shortValuesNames, this.parents);
+        this.cpt = new CPT(block, this.Name, this.shortValuesNames, this.parents); //send to CPT constructor
     }
 }
