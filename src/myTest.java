@@ -77,7 +77,7 @@ public class myTest {
                 if(s[i].contains("Queries"))continue;
                 //System.out.println(s[i] + "************");
             }*//*
-            *//*int indx = sb.indexOf("Parents:")+9;
+         *//*int indx = sb.indexOf("Parents:")+9;
             System.out.println(indx);
             String [] as = sb.substring(indx).split("CPT");
             for(int i=0; i<as.length; i++) {

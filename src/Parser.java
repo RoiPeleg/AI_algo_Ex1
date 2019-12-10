@@ -1,11 +1,11 @@
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
+//import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+//import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.regex.Matcher;
+//import java.util.Arrays;
+//import java.util.regex.Matcher;
 /**
  * Parses input txt to create it's matching graph
  */
@@ -42,7 +42,8 @@ public class Parser {
             NodeCollection NC2 = new NodeCollection(s2);
             NC2.nodes[2].getCpt().visualPrint();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            //System.out.println(e.getMessage());
         }
     }
 

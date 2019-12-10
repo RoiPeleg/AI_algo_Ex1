@@ -1,5 +1,5 @@
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CPT {
 
@@ -22,41 +22,39 @@ public class CPT {
     }
 
     //constructors
-    public CPT(String block, char name, char[] values, ArrayList<NodeCollection.Node> parents) {
+    public CPT(String block, char name, char[] values, ArrayList<Node> parents) {
         this.CPT_values = new char[sizeOfRows(values, parents)][sizeOfCols(parents)];
         this.CPT_prob = new double[CPT_values.length-1];
         this.CPTof = name;
 
         //set the values in the first row (variables names)
-        for(int j=0; j<CPT_values[0].length; j++)
+        for(int j=0; j<parents.size(); j++)
             CPT_values[0][j] = parents.get(j).getName();
-        CPT_values[0][CPT_values.length-1] = name;
+        CPT_values[0][CPT_values[0].length-1] = name;
 
         //set the rest of the CPT (and prob)
         String[] block_rows = block.split("\n");
         int row_count_block = 4; //4 = the line where the content of the CPT begins;
         int row_count_CPT = 1;
         int col_count_CPT = 0;
-        initCPT(block, values, block_rows, row_count_block, row_count_CPT, col_count_CPT);
+        initCPT(values, block_rows, row_count_block, row_count_CPT, col_count_CPT);
     }
 
     //private methods to help us in the constructor
-    private int sizeOfCols(ArrayList<NodeCollection.Node> parents) {
+    private int sizeOfCols(ArrayList<Node> parents) {
         return parents.size() + 1;
-
     }
 
-    private int sizeOfRows(char[] values, ArrayList<NodeCollection.Node> parents) {
+    private int sizeOfRows(char[] values, ArrayList<Node> parents) {
         int size = values.length;
         for(int i=0; i<parents.size(); i++) {
             size *= parents.get(i).getValues().length;
         }
-        return size;
+        return size + 1; //+1 because it's the row with variables's names.
     }
 
-    public void initCPT(String block, char[] values, String[] block_rows, int row_count_block, int row_count_CPT, int col_count_CPT) {
-        //while(row_count_CPT < CPT_values.length) {
-        while (row_count_block < block.length() && row_count_CPT < CPT_values.length) {
+    public void initCPT(char[] values, String[] block_rows, int row_count_block, int row_count_CPT, int col_count_CPT) {
+        while (row_count_block < block_rows.length && row_count_CPT < CPT_values.length) {
             String[] s = block_rows[row_count_block].split(",");
             for (int i = 0; i < s.length; i++) {
                 if (s[i].charAt(0) != '=' && s[i].charAt(0) != '0')
@@ -75,7 +73,7 @@ public class CPT {
                 col_count_CPT++;
             }
             CPT_values[row_count_CPT][CPT_values[0].length-1] = values[values.length-1];
-            int sumToSub = 0;
+            double sumToSub = 0;
             for(int i=row_count_CPT-1; i>row_count_CPT-values.length; i--)
                 sumToSub+= CPT_prob[i-1];
             CPT_prob[row_count_CPT-1] = 1-sumToSub;
@@ -136,3 +134,4 @@ public class CPT {
     }
 
 }
+
