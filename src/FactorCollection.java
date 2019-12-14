@@ -6,6 +6,7 @@ public class FactorCollection {
     //attributes
     private ArrayList<Factor> factor_collection;
     private int size;
+    private NodeCollection NC; //the Node Collection this Factor Collection belongs to.
 
     //getters
     public ArrayList<Factor> getFactor_collection() {
@@ -14,9 +15,13 @@ public class FactorCollection {
     public int getSize() {
         return size;
     }
+    public NodeCollection getNC() {
+        return NC;
+    }
 
     //constructor
     public FactorCollection(NodeCollection NC, char[][]evidence) {
+        this.NC = NC;
         factor_collection = new ArrayList<Factor>();
         for(int i=0; i<NC.nodes.length; i++) {
             Factor f = new Factor(NC.nodes[i].getCpt(), evidence);
@@ -48,8 +53,8 @@ public class FactorCollection {
         //attributes
         private char[][] factor_values;
         private double[] factor_prob;
-        private char[] factorOf;
-        //private FactorCollection FC; //To know which collection the Factor belongs to.
+        //private char[] factorOf;
+        private ArrayList<NodeCollection.Node> factorOf;
 
         //getters
         public char[][] getFactor_values() {
@@ -60,7 +65,7 @@ public class FactorCollection {
             return factor_prob;
         }
 
-        public char[] getFactorOf() {
+        public ArrayList<NodeCollection.Node> getFactorOf() {
             return factorOf;
         }
 
@@ -79,20 +84,15 @@ public class FactorCollection {
                                     this.factor_prob = remove_value(this.factor_prob, k-1);
                                 }
             int variables_count = this.factor_values[0].length;
-            this.factorOf = new char[variables_count];
+            this.factorOf = new ArrayList<NodeCollection.Node>(variables_count);
             for(int i=0; i<variables_count; i++) {
-                this.factorOf[i] = this.factor_values[0][i];
+                this.factorOf.add(NC.convertToItsNode(factor_values[0][i]));
             }
         }
 
-        //Manually constructor (for testing)
-        public Factor(char[][] values, double[] prob) {
-            this.factor_values = values;
-            this.factor_prob = prob;
-            this.factorOf = new char[values[0].length];
-            for(int i=0; i<values[0].length; i++) {
-                this.factorOf[i] = values[0][i];
-            }
+        public Factor(int sizeRow, int sizeCol) {
+            this.factor_values = new char[sizeRow+1][sizeCol];
+            this.factor_prob = new double[sizeRow];
         }
 
         // Auxiliary functions for the constructor
@@ -146,7 +146,7 @@ public class FactorCollection {
 
         //printing method (to help us test this class visually)
         public void visualPrint() {
-            System.out.println("Factor of: " + Arrays.toString(this.getFactorOf()));
+            System.out.println("Factor of: " + factorOf.toString());
             System.out.println();
             for(int i=0; i<getFactor_values().length; i++) {
                 for(int j=0; j<getFactor_values()[0].length; j++) {
@@ -163,9 +163,42 @@ public class FactorCollection {
 
         //methods for VARIABLE ELIMINATION algorithm
 
-        public void join_factors(Factor A, Factor B) {
-            int numOfCols = 0, numOfRows = 0;
+        public void join_factors(Factor A, Factor B, char varToJoin) {
+            if(!(containsVar(A, varToJoin)) || !(containsVar(B, varToJoin)))
+                throw new RuntimeException("One or more of the factors are not factor of the variable you want to join");
+            Factor f = new Factor(sizeOfRows(A,B,varToJoin), sizeOfCols(A,B,varToJoin));
+
             //......
+        }
+
+        private int sizeOfCols(Factor A, Factor B, char var) {
+            return 0;
+        }
+
+        private int sizeOfRows(Factor A, Factor B, char var) {
+            int a_col = -1, b_col = -1; //the column in every factor that belongs to var
+            for(int i=0; i<A.factor_values[0].length; i++) {
+                if (A.factor_values[0][i] == var) a_col = i;
+                break;
+            }
+            for(int j=0; j<B.factor_values[0].length; j++) {
+                if (A.factor_values[0][j] == var) b_col = j;
+                break;
+            }
+            ArrayList<Character> values = new ArrayList<Character>();
+            for(int i=0; i<A.factorOf.size(); i++) {
+                char value = A.factorOf.get(i).getShortValuesNames()[i];
+                values.add(value);
+            }
+            //...........
+            return 0;
+        }
+
+        private boolean containsVar(Factor f, char varToJoin) {
+            for(int i=0; i<f.factorOf.size(); i++)
+                if (f.factorOf.get(i).getName() == varToJoin)
+                    return true;
+            return false;
         }
 
         public void eliminate_factors(Factor A, Factor B){;}
