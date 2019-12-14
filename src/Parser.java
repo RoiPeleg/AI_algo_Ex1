@@ -39,7 +39,10 @@ public class Parser {
             //String [] s2 = sb_2.toString().split("Var");
             if(!s[0].contains("Network")) throw new RuntimeException("The input is not representing a Network!");
             NodeCollection NC1 = new NodeCollection(s);
-            for(int i=0; i<NC1.nodes.length; i++) NC1.nodes[i].getCpt().visualPrint();
+            char[][]evidence = {{'j','m'},
+                                {'t','t'}};
+            FactorCollection FC1 = new FactorCollection(NC1, evidence);
+            for(int i=0; i< FC1.getSize(); i++) FC1.getFactor_collection().get(i).visualPrint();
             //NodeCollection NC2 = new NodeCollection(s2);
         } catch (Exception e) {
             e.printStackTrace();

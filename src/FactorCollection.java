@@ -74,7 +74,7 @@ public class FactorCollection {
                     for (int j = 0; j < T.getCPT_values()[0].length; j++)
                         if (evidence[0][i] == T.getCPT_values()[0][j])
                             for (int k = 1; k < T.getCPT_values().length; k++)
-                                if (T.getCPT_values()[k][j] != evidence[1][i]) { //so we need to remove this row to factor
+                                if (T.getCPT_values()[k][j] != evidence[1][i]) { //so we need to remove this row from the factor
                                     this.factor_values = remove_row(this.factor_values, k);
                                     this.factor_prob = remove_value(this.factor_prob, k-1);
                                 }
