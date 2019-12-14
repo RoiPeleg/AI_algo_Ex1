@@ -87,7 +87,7 @@ public class CPT {
             double sumToSub = 0;
             for(int i=row_count_CPT-1; i>row_count_CPT-values.length; i--)
                 sumToSub+= CPT_prob[i-1];
-            CPT_prob[row_count_CPT-1] = 1-sumToSub;
+            CPT_prob[row_count_CPT-1] = 1.0-sumToSub;
             row_count_CPT++;
             col_count_CPT = 0;
             row_count_block++;

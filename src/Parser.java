@@ -4,7 +4,7 @@
 import java.io.BufferedReader;
 //import java.io.FileNotFoundException;
 import java.io.FileReader;
-//import java.util.Arrays;
+import java.util.Arrays;
 //import java.util.regex.Matcher;
 /**
  * Parses input txt to create it's matching graph
@@ -33,14 +33,14 @@ public class Parser {
 
     public void toConstruct() {
         try {
-            //StringBuilder sb = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt"); //roi : ("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input.txt")
-            StringBuilder sb_2 = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input2.txt");
-            //String [] s = sb.toString().split("Var");
-            String [] s2 = sb_2.toString().split("Var");
-            //System.out.println(Arrays.toString(s2));
-            //NodeCollection NC1 = new NodeCollection(s);
-            NodeCollection NC2 = new NodeCollection(s2);
-            NC2.nodes[2].getCpt().visualPrint(); //for testing
+            StringBuilder sb = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt"); //roi : ("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input.txt")
+            //StringBuilder sb_2 = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input2.txt");
+            String [] s = sb.toString().split("Var");
+            //String [] s2 = sb_2.toString().split("Var");
+            if(!s[0].contains("Network")) throw new RuntimeException("The input is not representing a Network!");
+            NodeCollection NC1 = new NodeCollection(s);
+            for(int i=0; i<NC1.nodes.length; i++) NC1.nodes[i].getCpt().visualPrint();
+            //NodeCollection NC2 = new NodeCollection(s2);
         } catch (Exception e) {
             e.printStackTrace();
             //System.out.println(e.getMessage());
