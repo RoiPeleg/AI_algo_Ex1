@@ -43,6 +43,8 @@ public class Parser {
                                 {'t','t'}};
             FactorCollection FC1 = new FactorCollection(NC1, evidence);
             for(int i=0; i< FC1.getSize(); i++) FC1.getFactor_collection().get(i).visualPrint();
+            VariableElimination ve = new VariableElimination();
+            ve.join_factors(FC1.getFactor_collection().get(0),FC1.getFactor_collection().get(2),'B');
             //NodeCollection NC2 = new NodeCollection(s2);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 public class FactorCollection {
 
@@ -54,7 +53,6 @@ public class FactorCollection {
         //attributes
         private char[][] factor_values;
         private double[] factor_prob;
-        //private char[] factorOf;
         private ArrayList<NodeCollection.Node> factorOf;
 
         //getters
@@ -68,6 +66,17 @@ public class FactorCollection {
 
         public ArrayList<NodeCollection.Node> getFactorOf() {
             return factorOf;
+        }
+
+        //setters
+        public void setFactor_values(char[][] factor_values) {
+            this.factor_values = factor_values;
+        }
+        public void setFactor_prob(double[] factor_prob) {
+            this.factor_prob = factor_prob;
+        }
+        public void setFactorOf(ArrayList<NodeCollection.Node> factorOf) {
+            this.factorOf = factorOf;
         }
 
         //constructor
@@ -147,7 +156,7 @@ public class FactorCollection {
 
         //printing method (to help us test this class visually)
         public void visualPrint() {
-            System.out.println("Factor of: " + factorOf.toString());
+            System.out.println("Factor of: " + Arrays.toString(factor_values[0]));
             System.out.println();
             for(int i=0; i<getFactor_values().length; i++) {
                 for(int j=0; j<getFactor_values()[0].length; j++) {
@@ -160,61 +169,10 @@ public class FactorCollection {
                 else
                     System.out.println(" "+ getFactor_prob()[i-1]);
             }
+            System.out.println();
         }
 
-        //methods for VARIABLE ELIMINATION algorithm
 
-        public void join_factors(Factor A, Factor B, char varToJoin) {
-            if((findVarInd(A, varToJoin))==-1 || (findVarInd(B, varToJoin))==-1) //var isn't exist on the factor/s
-                throw new RuntimeException("One or more of the factors are not factor of the variable you want to join");
-            Factor joinFactor = new Factor(sizeOfRows(A,B,varToJoin), sizeOfCols(A,B));
-
-            //......
-        }
-
-        private int sizeOfCols(Factor A, Factor B) {
-            int counter = A.factorOf.size(); //for starting: the counter will be the size of A columns.
-            //now we'll unite it with the variables of B Factor to create the final group of the variables of the new factor.
-            for(int i=0; i<B.factor_values[0].length; i++) { //the length of the first row on B's factor_values = B.factorOf.size().
-                if(!(Arrays.asList(A.factor_values[0]).contains(B.factor_values[0][i])))
-                    counter ++;
-            }
-            return counter;
-        }
-
-        private int sizeOfRows(Factor A, Factor B, char var) {
-            int a_col = -1, b_col = -1; //the column in every factor that belongs to var
-            for(int i=0; i<A.factor_values[0].length; i++) { //to find the column of var in Factor A
-                if (A.factor_values[0][i] == var) a_col = i;
-                break;
-            }
-            for(int j=0; j<B.factor_values[0].length; j++) { //to find the column of var in Factor B
-                if (A.factor_values[0][j] == var) b_col = j;
-                break;
-            }
-            int counter = 0;
-            char[] values; //we'll define this array of var's values
-            values = factorOf.get(findVarInd(A, var)).getShortValuesNames(); //now values point on var's shortValuesNames array.
-            for(int val=0; val<values.length; val++) //Loop that goes through all possible values of var
-                for(int i = 1; i < A.factor_values.length; i++) //Loop that goes through all the a_col column in Factor A
-                    if(A.factor_values[i][a_col] == val)
-                        for(int j = 1; j < B.factor_values.length; j++) //Loop that goes through all the b_col column in Factor B
-                             if(B.factor_values[j][b_col] == val) counter++;
-            return counter;
-        }
-
-        private int findVarInd(Factor f, char varToJoin) {
-            for(int i=0; i<f.factorOf.size(); i++)
-                if (f.factorOf.get(i).getName() == varToJoin)
-                    return i;
-            return -1;
-        }
-
-        public void eliminate_factors(Factor A, Factor B){;}
-
-        private void normalization(Factor f){;}
-
-        private void optimalOrderToJoin(Factor[] factor_collection){;}
     }
 
 
