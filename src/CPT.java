@@ -97,15 +97,21 @@ public class CPT {
     }
 
     //other methods
-    public boolean containsEvidence(char[][]evidence) {
-        for(int i=0; i<this.getCPT_values()[0].length; i++) {
-            char variable = this.getCPT_values()[0][i];
-            for(int j=0; j<evidence[0].length; j++) {
-                if(evidence[0][j] == variable)
-                    return true;
+    /**
+     * method that count how many evidence variables this CPT contains
+     * @param evidence = 2D array that represent the evidence variables names & it's value
+     * @return the number of evidence variables in this CPT:
+     * (0: if does not exist variables at all)
+     */
+    public int countEvidence(char[][]evidence) {
+        int counter = 0;
+        for(int i=0; i<evidence[0].length; i++) {
+            for(int j=0; j<this.CPT_values[0].length; j++) {
+                if(this.CPT_values[0][j] == evidence[0][i])
+                    counter ++;
             }
         }
-        return false;
+        return counter;
     }
 
     public double[] copyToFactorProb() {

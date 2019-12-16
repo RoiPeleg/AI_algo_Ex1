@@ -84,15 +84,24 @@ public class FactorCollection {
             this.factor_values = T.copyToFactorValues();
             this.factor_prob = T.copyToFactorProb();
             //if there are evidence variables in CPT, so we need to remove some rows from it
-            if(T.containsEvidence(evidence))
+            int count_evidence = T.countEvidence(evidence);
+            if(count_evidence != 0)
                 for (int i = 0; i < evidence[0].length; i++)
                     for (int j = 0; j < T.getCPT_values()[0].length; j++)
-                        if (evidence[0][i] == T.getCPT_values()[0][j])
-                            for (int k = 1; k < T.getCPT_values().length; k++)
+                        if (evidence[0][i] == T.getCPT_values()[0][j]) {
+                            int factor_count = 1;
+                            for (int k = 1; k < T.getCPT_values().length; k++) {
                                 if (T.getCPT_values()[k][j] != evidence[1][i]) { //so we need to remove this row from the factor
-                                    this.factor_values = remove_row(this.factor_values, k);
-                                    this.factor_prob = remove_value(this.factor_prob, k-1);
+                                    this.factor_values = remove_row(this.factor_values, factor_count);
+                                    this.factor_prob = remove_value(this.factor_prob, factor_count-1);
+                                    factor_count --;
                                 }
+                                factor_count ++;
+                            }
+                        }
+            if(count_evidence != 0) { //the factor contains evidence
+                this.factor_values = remove_evidence_col(this.factor_values, evidence, count_evidence);
+            }
             int variables_count = this.factor_values[0].length;
             this.factorOf = new ArrayList<NodeCollection.Node>(variables_count);
             for(int i=0; i<variables_count; i++) {
@@ -146,6 +155,28 @@ public class FactorCollection {
                 }
             }
             return newTable;
+        }
+
+        private char[][] remove_evidence_col(char[][] table, char[][] evidence, int count_evidence) {
+            char[][] newTable = new char[table.length][table[0].length - count_evidence];
+            int newTable_count = 0; //counter for number of columns we already define in the new table.
+            for(int i=0; i<evidence[0].length; i++) {
+                if(countainsVal(table[0], evidence[0][i])) {
+                    for(int j=0; j<table[0].length; j++) {
+                        if(table[0][j] != evidence[0][i]) //so we need to copy this column to the result (left it)
+                            for(int k=0; k<newTable.length; k++)
+                                newTable[k][newTable_count] = table[k][j];
+                        newTable_count ++;
+                    }
+                }
+            }
+            return newTable;
+        }
+
+        private boolean countainsVal(char[] arr, char c) {
+            for(int i=0; i<arr.length; i++)
+                if(arr[i] == c) return true;
+            return false;
         }
 
         public boolean isOneValued() {
