@@ -109,9 +109,10 @@ public class FactorCollection {
             }
         }
 
-        public Factor(int sizeRow, int sizeCol) {
-            this.factor_values = new char[sizeRow+1][sizeCol];
-            this.factor_prob = new double[sizeRow];
+        public Factor() { //default constructor
+            this.factor_values = null;
+            this.factor_prob = null;
+            this.factorOf = null;
         }
 
         // Auxiliary functions for the constructor
@@ -161,7 +162,7 @@ public class FactorCollection {
             char[][] newTable = new char[table.length][table[0].length - count_evidence];
             int newTable_count = 0; //counter for number of columns we already define in the new table.
             for(int i=0; i<evidence[0].length; i++) {
-                if(countainsVal(table[0], evidence[0][i])) {
+                if(containsVal(table[0], evidence[0][i])) {
                     for(int j=0; j<table[0].length; j++) {
                         if(table[0][j] != evidence[0][i]) //so we need to copy this column to the result (left it)
                             for(int k=0; k<newTable.length; k++)
@@ -173,7 +174,7 @@ public class FactorCollection {
             return newTable;
         }
 
-        private boolean countainsVal(char[] arr, char c) {
+        private boolean containsVal(char[] arr, char c) {
             for(int i=0; i<arr.length; i++)
                 if(arr[i] == c) return true;
             return false;
