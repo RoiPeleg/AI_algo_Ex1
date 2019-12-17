@@ -1,10 +1,11 @@
 //import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 //import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 
-import java.io.BufferedReader;
+import java.io.*;
 //import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 //import java.util.regex.Matcher;
 /**
  * Parses input txt to create it's matching graph
@@ -49,5 +50,15 @@ public class Parser {
              */
         } catch (Exception e) { e.printStackTrace(); }
         return null;
+    }
+
+    public static void toOutput (ArrayList<String>ls)throws IOException {
+        File file = new File("output.txt");
+        if (!file.canWrite()) throw new IOException("can not be write to");
+        if (file.exists()) file.delete();
+        FileWriter fileWriter = new FileWriter(file, true);
+        for (int i=0;i<ls.size();i++)
+            fileWriter.write(ls.get(i) + "\n");
+        fileWriter.close();
     }
 }
