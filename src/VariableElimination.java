@@ -5,7 +5,7 @@ public class VariableElimination {
 
     //methods on Factors for VARIABLE ELIMINATION algorithm
 
-    public FactorCollection.Factor join_factors(FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
+    public static FactorCollection.Factor join_factors(FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
         if((findVarInd(A, varToJoin))==-1 || (findVarInd(B, varToJoin))==-1) //var isn't exist on the factor/s
             throw new RuntimeException("One or more of the factors are not factor of the variable you want to join");
         FactorCollection.Factor joinFactor; //= new FactorCollection.Factor();
@@ -25,7 +25,7 @@ public class VariableElimination {
         return null;
     }
 
-    private int sizeOfCols(FactorCollection.Factor A, FactorCollection.Factor B) {
+    private static int sizeOfCols(FactorCollection.Factor A, FactorCollection.Factor B) {
         int counter = A.getFactorOf().size(); //for starting: the counter will be the size of A columns.
         //now we'll unite it with the variables of B Factor to create the final group of the variables of the new factor.
         for(int i=0; i<B.getFactor_values()[0].length; i++) { //the length of the first row on B's factor_values = B.factorOf.size().
@@ -35,7 +35,7 @@ public class VariableElimination {
         return counter;
     }
 
-    private int sizeOfRows(FactorCollection.Factor A, FactorCollection.Factor B, char var) { //check!!!!!
+    private static int sizeOfRows(FactorCollection.Factor A, FactorCollection.Factor B, char var) { //check!!!!!
         int a_col = -1, b_col = -1; //the column in each factor that belongs to var
         for(int i=0; i<A.getFactor_values()[0].length; i++) { //to find the column of var in Factor A
             if (A.getFactor_values()[0][i] == var) {
@@ -60,20 +60,20 @@ public class VariableElimination {
         return counter + 1; //+1 because there is also the first row (index 0) of variables' names.
     }
 
-    private int findVarInd(FactorCollection.Factor f, char varToJoin) {
+    private static int findVarInd(FactorCollection.Factor f, char varToJoin) {
         for(int i=0; i<f.getFactorOf().size(); i++)
             if (f.getFactorOf().get(i).getName() == varToJoin)
                 return i;
         return -1;
     }
 
-    private int indexOfVal(char[] arr, char c) {
+    private static int indexOfVal(char[] arr, char c) {
         for(int i=0; i<arr.length; i++)
             if(arr[i] == c) return i;
         return -1;
     }
 
-    public void eliminate_factors(NodeCollection.Node toRemove, FactorCollection.Factor factor){
+    public static void eliminate_factors(NodeCollection.Node toRemove, FactorCollection.Factor factor){
         char c = toRemove.getName();
         int numberOfVals = toRemove.getValues().length;//T/F etc..
         char[][] vals = factor.getFactor_values();
@@ -99,7 +99,7 @@ public class VariableElimination {
         factor.setFactor_prob(sum);
     }
 
-    private void normalization(FactorCollection.Factor f){;}
+    private static void normalization(FactorCollection.Factor f){;}
 
-    private void optimalOrderToJoin(FactorCollection.Factor[] factor_collection){;}
+    private static void optimalOrderToJoin(FactorCollection.Factor[] factor_collection){;}
 }

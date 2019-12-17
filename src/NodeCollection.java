@@ -7,7 +7,9 @@ public class NodeCollection {
     //attributes
     public Node[] nodes;
     private int counter = -1;
+    private String[] Queries;
 
+    public String[] getQueries(){return Queries;}
     //constructor
     public NodeCollection(String[] input) {
         nodes = new Node[input.length - 2];
@@ -17,6 +19,7 @@ public class NodeCollection {
                 Node n = new Node(inp[0]);
                 counter++;
                 nodes[counter] = n;
+                Queries = inp[1].replaceFirst("\\n","").split("\\n");
             }
             else {
                 Node n = new Node(input[i]); //send every block to Node constructor;
