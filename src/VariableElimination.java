@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class VariableElimination {
@@ -72,7 +73,31 @@ public class VariableElimination {
         return -1;
     }
 
-    public void eliminate_factors(FactorCollection.Factor A, FactorCollection.Factor B){;}
+    public void eliminate_factors(NodeCollection.Node toRemove, FactorCollection.Factor factor){
+        char c = toRemove.getName();
+        int numberOfVals = toRemove.getValues().length;//T/F etc..
+        char[][] vals = factor.getFactor_values();
+        double[] given = factor.getFactor_prob();
+        int size = (int) Math.pow(numberOfVals,vals.length);//size to be removed
+        char[][] chars = new char[vals.length-1][size];
+        double [] sum = new double[size];
+        int col=0;//col of to remove
+        for(int i=0;i<chars.length;i++)//copies first row
+        {
+            for(int j =0;j<chars[0].length;i++)
+                chars[i][j] = vals[i][j];
+        }
+        for(int i=0;i<vals[0].length;i++)//finds column of toremove
+        {
+            if(vals[0][i]==c)col=i;
+        }
+        for(int i =0;i<vals.length/numberOfVals;i++)//sums up needed probs
+        {
+            sum[i]= given[i] + given[i+size];
+        }
+        factor.setFactor_values(chars);
+        factor.setFactor_prob(sum);
+    }
 
     private void normalization(FactorCollection.Factor f){;}
 
