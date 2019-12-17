@@ -31,9 +31,9 @@ public class Parser {
         return contents;
     }
 
-    public void toConstruct() {
+    public static void toConstruct() {
         try {
-            StringBuilder sb = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt"); //roi : ("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input.txt")
+            StringBuilder sb = getInput("src/input.txt"); //roi : ("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input.txt")
             //StringBuilder sb_2 = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input2.txt");
             String [] s = sb.toString().split("Var");
             //String [] s2 = sb_2.toString().split("Var");
@@ -51,8 +51,4 @@ public class Parser {
             //System.out.println(e.getMessage());
         }
     }
-
-    /*public static void main(String[] args) {
-        toConstruct();
-    }*/
 }
