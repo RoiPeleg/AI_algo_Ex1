@@ -31,14 +31,15 @@ public class Parser {
         return contents;
     }
 
-    public static void toConstruct() {
+    public static NodeCollection toConstruct() {
         try {
-            StringBuilder sb = getInput("src/input.txt"); //roi : ("C:\\Users\\user\\Documents\\GitHub\\AI_algo\\src\\input.txt")
-            //StringBuilder sb_2 = getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input2.txt");
+            StringBuilder sb = getInput("src/input.txt");
             String [] s = sb.toString().split("Var");
             //String [] s2 = sb_2.toString().split("Var");
             if(!s[0].contains("Network")) throw new RuntimeException("The input is not representing a Network!");
             NodeCollection NC1 = new NodeCollection(s);
+            return NC1;
+            /*
             char[][]evidence = {{'J','M'},
                     {'t','t'}};
             FactorCollection FC1 = new FactorCollection(NC1, evidence);
@@ -46,9 +47,8 @@ public class Parser {
             VariableElimination ve = new VariableElimination();
             ve.join_factors(FC1.getFactor_collection().get(0),FC1.getFactor_collection().get(2),'B');
             //NodeCollection NC2 = new NodeCollection(s2);
-        } catch (Exception e) {
-            e.printStackTrace();
-            //System.out.println(e.getMessage());
-        }
+             */
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
     }
 }

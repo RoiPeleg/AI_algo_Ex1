@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class FactorCollection {
 
@@ -17,6 +18,10 @@ public class FactorCollection {
     }
     public NodeCollection getNC() {
         return NC;
+    }
+    public ArrayList<Factor> getOrfer()//should return the given order of nodes
+    {
+        return null;
     }
 
     //constructor
@@ -206,7 +211,4 @@ public class FactorCollection {
 
 
     }
-
-
-
 }
