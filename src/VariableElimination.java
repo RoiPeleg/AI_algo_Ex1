@@ -5,24 +5,34 @@ public class VariableElimination {
 
     //methods on Factors for VARIABLE ELIMINATION algorithm
 
-    public static FactorCollection.Factor join_factors(FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
+    public void join_factors(FactorCollection FC, FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
         if((findVarInd(A, varToJoin))==-1 || (findVarInd(B, varToJoin))==-1) //var isn't exist on the factor/s
             throw new RuntimeException("One or more of the factors are not factor of the variable you want to join");
-        FactorCollection.Factor joinFactor; //= new FactorCollection.Factor();
         char[][] values = new char[sizeOfRows(A,B,varToJoin)][sizeOfCols(A,B)];
         double[] prob = new double[values.length - 1];
+        int valuesColCount = 0;
+        int valuesRowCount = 1;
         for(int i=0; i<A.getFactor_values()[0].length; i++) {
-            if(indexOfVal(B.getFactor_values()[0], A.getFactor_values()[0][i]) != -1) { //so we need to multiply the values to set it on the new factor
-                for(int j=0; j<B.getFactor_values().length; j++) {
-
-                }
+            int indexInB = indexOfVal(B.getFactor_values()[0], A.getFactor_values()[0][i]);
+            if(indexInB != -1) { //so we need to multiply the values to set it on the new factor
+                values[0][valuesColCount] = A.getFactor_values()[0][i];
+                for(int j=1; j<A.getFactor_values().length; j++) //runs on all A's rows
+                    for (int k = 1; k < B.getFactor_values().length; k++) //runs on all B's rows
+                        if (B.getFactor_values()[k][indexInB] == A.getFactor_values()[j][i]) {
+                            values[valuesRowCount][valuesColCount] = B.getFactor_values()[k][indexInB];
+                            prob[valuesRowCount - 1] = B.getFactor_prob()[k - 1] * A.getFactor_prob()[j - 1];
+                            valuesRowCount++;
+                            if (valuesRowCount == values.length) {
+                                valuesRowCount = 0;
+                                valuesColCount++;
+                            }
+                        }
             }
         }
-        //joinFactor.setFactor_values(values);
-        //joinFactor.setFactor_prob(prob);
-        //for(int i=0; i<values[0].length; i++) //init factorOf!!!!
-
-        return null;
+        A.setFactor_values(values);
+        A.setFactor_prob(prob);
+        A.setFactorOf(values[0]);
+        FC.removeFactor(B);
     }
 
     private static int sizeOfCols(FactorCollection.Factor A, FactorCollection.Factor B) {

@@ -19,10 +19,10 @@ public class FactorCollection {
     public NodeCollection getNC() {
         return NC;
     }
-    public ArrayList<Factor> getOrfer()//should return the given order of nodes
+    /*public ArrayList<Factor> getOrfer()//should return the given order of nodes
     {
         return null;
-    }
+    }*/
 
     //constructor
     public FactorCollection(NodeCollection NC, char[][]evidence) {
@@ -53,6 +53,11 @@ public class FactorCollection {
         }
     }
 
+    public void removeFactor(Factor f) {
+        this.factor_collection.remove(f);
+        size --;
+    }
+
     public class Factor {
 
         //attributes
@@ -80,11 +85,14 @@ public class FactorCollection {
         public void setFactor_prob(double[] factor_prob) {
             this.factor_prob = factor_prob;
         }
-        public void setFactorOf(ArrayList<NodeCollection.Node> factorOf) {
-            this.factorOf = factorOf;
+        public void setFactorOf(char[] factorOfChars) {
+            this.factorOf = new ArrayList<NodeCollection.Node>();
+            for(int i=0; i<factorOfChars.length; i++) {
+                this.factorOf.add(NC.convertToItsNode(factorOfChars[i]));
+            }
         }
 
-        //constructor
+        //constructors
         public Factor(CPT T, char[][]evidence) {
             this.factor_values = T.copyToFactorValues();
             this.factor_prob = T.copyToFactorProb();
@@ -114,10 +122,13 @@ public class FactorCollection {
             }
         }
 
-        public Factor() { //default constructor
-            this.factor_values = null;
-            this.factor_prob = null;
-            this.factorOf = null;
+        public Factor(char[][] values, double[] prob) {
+            this.factor_values = values;
+            this.factor_prob = prob;
+            this.factorOf = new ArrayList<NodeCollection.Node>();
+            for(int i=0; i<values[0].length; i++) {
+                this.factorOf.add(NC.convertToItsNode(values[0][i]));
+            }
         }
 
         // Auxiliary functions for the constructor

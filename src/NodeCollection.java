@@ -10,6 +10,7 @@ public class NodeCollection {
     private String[] Queries;
 
     public String[] getQueries(){return Queries;}
+
     //constructor
     public NodeCollection(String[] input) {
         nodes = new Node[input.length - 2];
