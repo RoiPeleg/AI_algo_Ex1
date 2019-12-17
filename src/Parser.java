@@ -31,14 +31,13 @@ public class Parser {
         return contents;
     }
 
-    public static NodeCollection toConstruct() {
+    public static NodeCollection toConstruct() { //should gets a sb input
         try {
             StringBuilder sb = getInput("src/input.txt");
             String [] s = sb.toString().split("Var");
-            //String [] s2 = sb_2.toString().split("Var");
             if(!s[0].contains("Network")) throw new RuntimeException("The input is not representing a Network!");
             NodeCollection NC1 = new NodeCollection(s);
-            return NC1;
+            return NC1; //The NodeCollection actually represents a bayesian network
             /*
             char[][]evidence = {{'J','M'},
                     {'t','t'}};

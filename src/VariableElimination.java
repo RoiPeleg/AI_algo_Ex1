@@ -5,7 +5,7 @@ public class VariableElimination {
 
     //methods on Factors for VARIABLE ELIMINATION algorithm
 
-    public void join_factors(FactorCollection FC, FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
+    public static void join_factors(FactorCollection FC, FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
         if((findVarInd(A, varToJoin))==-1 || (findVarInd(B, varToJoin))==-1) //var isn't exist on the factor/s
             throw new RuntimeException("One or more of the factors are not factor of the variable you want to join");
         char[][] values = new char[sizeOfRows(A,B,varToJoin)][sizeOfCols(A,B)];
@@ -14,7 +14,7 @@ public class VariableElimination {
         int valuesRowCount = 1;
         for(int i=0; i<A.getFactor_values()[0].length; i++) {
             int indexInB = indexOfVal(B.getFactor_values()[0], A.getFactor_values()[0][i]);
-            if(indexInB != -1) { //so we need to multiply the values to set it on the new factor
+            if(indexInB != -1) { //so this var exists on B --> we need to multiply the values to set it on the new factor.
                 values[0][valuesColCount] = A.getFactor_values()[0][i];
                 for(int j=1; j<A.getFactor_values().length; j++) //runs on all A's rows
                     for (int k = 1; k < B.getFactor_values().length; k++) //runs on all B's rows
@@ -27,6 +27,9 @@ public class VariableElimination {
                                 valuesColCount++;
                             }
                         }
+            }
+            else { //this variable is unique to Factor A (not exists on B).
+                
             }
         }
         A.setFactor_values(values);
@@ -109,7 +112,19 @@ public class VariableElimination {
         factor.setFactor_prob(sum);
     }
 
-    private static void normalization(FactorCollection.Factor f){;}
+    public static void normalization(FactorCollection.Factor f){;}
 
-    private static void optimalOrderToJoin(FactorCollection.Factor[] factor_collection){;}
+    public static void optimalOrderToJoin(FactorCollection.Factor[] factor_collection){;}
+
+    //main function: Variable Elimination
+    public static void variableElimination(NodeCollection NC, String query) {
+        //init factors
+        //while there are still hidden variables:
+          //pick hidden variable H (he gave us the order)
+          //find all the factors that are factors of H
+          //optimal order to join the factors
+          //join every 2 factors till the end
+          //eliminate H
+        //join all remains factors and normalize
+    }
 }
