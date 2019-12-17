@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Ex1 {
@@ -8,8 +9,11 @@ public class Ex1 {
         for (int i=0;i<q.length;i++)
         {
             System.out.println("q"+i + ") "+q[i]);
+            ls.add(VariableElimination.variableElimination(nc,q[i]));
         }
-        //Queries handling
-        Parser.toOutput(ls);
+        try {
+            Parser.toOutput(ls);
+        }
+        catch (IOException e){e.printStackTrace();}
         }
 }

@@ -117,7 +117,7 @@ public class VariableElimination {
     public static void optimalOrderToJoin(FactorCollection.Factor[] factor_collection){;}
 
     //main function: Variable Elimination
-    public static void variableElimination(NodeCollection NC, String query) {
+    public static String variableElimination(NodeCollection NC, String query) {
         //init factors
         //while there are still hidden variables:
           //pick hidden variable H (he gave us the order)
@@ -126,5 +126,6 @@ public class VariableElimination {
           //join every 2 factors till the end
           //eliminate H
         //join all remains factors and normalize
+        return "";
     }
 }
