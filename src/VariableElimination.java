@@ -155,7 +155,20 @@ public class VariableElimination {
     public static void normalization(FactorCollection.Factor f){;}
 
     public static int[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors){
-        return new int[0];
+        int[] t = new int[2];
+        int max = H_factors.get(0).getFactor_prob().length * H_factors.get(1).getFactor_prob().length;
+        for (int i = 0; i < H_factors.size(); i++) {
+            for (int j = 0; j < H_factors.size(); j++) {
+                if (j == i) continue;
+                int x = H_factors.get(i).getFactor_prob().length * H_factors.get(j).getFactor_prob().length;
+                if (max < x) {
+                    max = x;
+                    t[0] = i;
+                    t[1] = j;
+                }
+            }
+        }
+        return t;
        //always 2 rows:
         // 0 = the index of the first factor to join
         // 1 = the index of second factor
