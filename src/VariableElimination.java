@@ -12,9 +12,10 @@ public class VariableElimination {
         int valuesColCount = 0;
         int valuesRowCount = 1;
         for(int i=0; i<A.getFactor_values()[0].length; i++) {
-            int indexInB = indexOfVal(B.getFactor_values()[0], A.getFactor_values()[0][i]);
-            if(indexInB != -1) { //so this var exists on B --> we need to multiply the values to set it on the new factor.
-                values[0][valuesColCount] = A.getFactor_values()[0][i];
+            //int indexInB = indexOfVal(B.getFactor_values()[0], A.getFactor_values()[0][i]);
+            int indexInB = findVarInd(B, varToJoin); //(indexInB != -1) because we already checked it!
+            values[0][valuesColCount] = A.getFactor_values()[0][i];
+            if(A.getFactor_values()[0][i] == varToJoin) { //so this var exists on B --> we need to multiply the values to set it on the new factor.
                 for(int j=1; j<A.getFactor_values().length; j++) //runs on all A's rows
                     for (int k = 1; k < B.getFactor_values().length; k++) //runs on all B's rows
                         if (B.getFactor_values()[k][indexInB] == A.getFactor_values()[j][i]) {
@@ -22,13 +23,37 @@ public class VariableElimination {
                             prob[valuesRowCount - 1] = B.getFactor_prob()[k - 1] * A.getFactor_prob()[j - 1];
                             valuesRowCount++;
                             if (valuesRowCount == values.length) {
-                                valuesRowCount = 0;
+                                valuesRowCount = 1; //0;
                                 valuesColCount++;
                             }
                         }
+            } else {
+                while(valuesRowCount < values.length) {
+                    int ARowCount = 0;
+                    while(ARowCount < A.getFactor_values().length) {
+                        values[valuesRowCount][valuesColCount] = A.getFactor_values()[ARowCount][i];
+                        ARowCount ++;
+                        valuesRowCount ++;
+                    }
+                }
+                valuesRowCount = 1;
+                valuesColCount ++;
             }
-            else { //this variable is unique to Factor A (not exists on B).
-                
+        }
+        if(valuesColCount != values[0].length) { //so there are variables on B that are not exist on A
+            for (int i = 0; i < B.getFactor_values()[0].length; i++) {
+                if (indexOfVal(A.getFactor_values()[0], B.getFactor_values()[0][i]) == -1) { //not exist in A
+                    while(valuesRowCount < values.length) {
+                        int BRowCount = 0;
+                        while(BRowCount < B.getFactor_values().length) {
+                            values[valuesRowCount][valuesColCount] = B.getFactor_values()[BRowCount][i];
+                            BRowCount ++;
+                            valuesRowCount ++;
+                        }
+                    }
+                    valuesRowCount = 1;
+                    valuesColCount ++;
+                }
             }
         }
         A.setFactor_values(values);

@@ -31,12 +31,16 @@ public class myTest {
         NodeCollection NC = Parser.toConstruct();
 
         FactorCollection FC = new FactorCollection(NC,evidence);
-        FactorCollection.Factor f = FC.new Factor(values,prob);
+        //FactorCollection.Factor f = FC.new Factor(values,prob);
 
-        for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
+        //for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
 
-        VariableElimination.eliminate_factors(FC,NC.nodes[2],f);
+        /*VariableElimination.eliminate_factors(FC,NC.nodes[2],f);
         System.out.println("after eli ............................");
+        for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();*/
+
+        VariableElimination.join_factors(FC,FC.getFactor_collection().get(3),FC.getFactor_collection().get(4),'A');
+        VariableElimination.join_factors(FC,FC.getFactor_collection().get(2),FC.getFactor_collection().get(3),'A');
         for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
 
         /*Parser p = new Parser();
