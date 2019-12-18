@@ -8,7 +8,7 @@ public class Ex1 {
         ArrayList<String>ls = new ArrayList<String>();
         for (int i=0;i<q.length;i++)
         {
-            System.out.println("q"+i + ") "+q[i]);
+            // System.out.println("q"+i + ") "+q[i]);
             ls.add(VariableElimination.variableElimination(nc,q[i]));
         }
         try {

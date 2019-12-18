@@ -4,7 +4,6 @@ import java.util.Arrays;
 public class VariableElimination {
 
     //methods on Factors for VARIABLE ELIMINATION algorithm
-
     public static void join_factors(FactorCollection FC, FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
         if((findVarInd(A, varToJoin))==-1 || (findVarInd(B, varToJoin))==-1) //var isn't exist on the factor/s
             throw new RuntimeException("One or more of the factors are not factor of the variable you want to join");
@@ -94,7 +93,7 @@ public class VariableElimination {
         int size = (int) Math.pow(numberOfVals,vals.length);//size to be removed
         char[][] chars = new char[vals.length-1][size];
         double [] sum = new double[size];
-        int col=0;//col of to remove
+        int col = 0;//col of toremove
         for(int i=0;i<chars.length;i++)//copies first row
         {
             for(int j =0;j<chars[0].length;i++)
@@ -118,6 +117,11 @@ public class VariableElimination {
 
     //main function: Variable Elimination
     public static String variableElimination(NodeCollection NC, String query) {
+        if (!query.contains("(")) return "yes";
+        String[] s = query.split("\\)")[0].replace("P", "").replace("(", "").split("\\|");
+        String Q = s[0];
+        String[] evidence = s[1].split("\\,");
+        String[] givenOrder = query.split("\\)")[1].replaceFirst("\\,", "").split("-");
         //init factors
         //while there are still hidden variables:
           //pick hidden variable H (he gave us the order)
