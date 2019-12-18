@@ -123,19 +123,29 @@ public class VariableElimination {
         char[][] chars = new char[size][vals[0].length-1];
         double [] sum = new double[size-1];
         int col = 0;//col of toremove
+        for (int i = 0; i < vals[0].length; i++)//finds column of toremove
+        {
+            if (vals[0][i] == c) col = i;
+        }
+        int k = 0, m = 0;
         for(int i=0;i<chars[0].length;i++)
         {
-            for(int j =0;j<chars.length;j++) {
-                chars[j][i] = vals[j][i];
+            if (col == i)
+                continue;
+            chars[k++][m] = vals[0][i];
+            for (int j = 1; j < vals.length; j = j + numberOfVals) {
+                chars[k++][m] = vals[j][i];
             }
+            k = 0;
+            m++;
         }
-        for(int i=0;i<vals[0].length;i++)//finds column of toremove
+        for (int i = 1; i < sum.length; i++)//sums up needed probs
         {
-            if(vals[0][i]==c)col=i;
-        }
-        for(int i =0;i<vals.length/numberOfVals;i++)//sums up needed probs
-        {
-            sum[i]= given[i] + given[i+size-1];
+            double s = 0;
+            for (int j = 0; j < numberOfVals; j++) {
+                s += given[i + j];
+            }
+            sum[i] = s;
         }
         factor.setFactor_values(chars);
         factor.setFactor_prob(sum);

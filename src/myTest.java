@@ -29,13 +29,11 @@ public class myTest {
         char[][]evidence = {{'J','M'},
                 {'t','t'}};
         NodeCollection NC = Parser.toConstruct();
-
         FactorCollection FC = new FactorCollection(NC,evidence);
-
         VariableElimination.join_factors(FC,FC.getFactor_collection().get(3),FC.getFactor_collection().get(4),'A');
         VariableElimination.join_factors(FC,FC.getFactor_collection().get(2),FC.getFactor_collection().get(3),'A');
+        for (int i = 0; i < FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
         VariableElimination.eliminate_factors(FC, NC.nodes[2], FC.getFactor_collection().get(2));
-
         for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
 
         /*Parser p = new Parser();
