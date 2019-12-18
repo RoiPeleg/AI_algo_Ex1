@@ -114,8 +114,6 @@ public class VariableElimination {
         char c = toRemove.getName();
         int numberOfVals = toRemove.getValues().length;//T/F etc..
         char[][] vals = factor.getFactor_values();
-        System.out.println(vals[0].length);
-        System.out.println(vals.length);
         double[] given = factor.getFactor_prob();
         int size = (int) Math.pow(vals[0].length-1,numberOfVals)+1;//size to be removed
         char[][] chars = new char[size][vals[0].length-1];
@@ -135,6 +133,13 @@ public class VariableElimination {
         {
             sum[i]= given[i] + given[i+size-1];
         }
+        System.out.println("chars:");
+        for (int i = 0; i < chars.length; i++) {
+            for (int j = 0; j < chars[i].length; j++) {
+                System.out.print(chars[i][j]);
+            }
+            System.out.println();
+        }
         for(int i=0;i<sum.length;i++)
         {
             System.out.println(sum[i]);
@@ -142,6 +147,7 @@ public class VariableElimination {
         factor.setFactor_values(chars);
         factor.setFactor_prob(sum);
         factor.setFactorOf(chars[0]);
+        FC.addFactor(factor);
     }
 
     public static void normalization(FactorCollection.Factor f){;}
@@ -159,7 +165,7 @@ public class VariableElimination {
         char[][] evidence = new char[2][evidenceStr.length];
         for(int i=0; i<evidenceStr.length; i++) {
             evidence[0][i] = evidenceStr[i].charAt(0);
-            evidence[1][i] = evidenceStr[i].charAt(2);
+            evidence[1][i] = evidenceStr[i].toUpperCase().charAt(2);
         }
         String[] givenOrder = query.split("\\)")[1].replaceFirst("\\,", "").split("-");
         char[] gOrder = new char[givenOrder.length];

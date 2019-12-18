@@ -54,6 +54,7 @@ public class Parser {
 
     public static void toOutput (ArrayList<String>ls)throws IOException {
         File file = new File("output.txt");
+        file.createNewFile();
         if (!file.canWrite()) throw new IOException("can not be write to");
         if (file.exists()) file.delete();
         FileWriter fileWriter = new FileWriter(file, true);

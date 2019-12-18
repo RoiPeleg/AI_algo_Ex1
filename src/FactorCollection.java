@@ -179,7 +179,7 @@ public class FactorCollection {
             int newTable_count = 0; //counter for number of columns we already define in the new table.
             for(int i=0; i<evidence[0].length; i++) {
                 if(containsVal(table[0], evidence[0][i])) {
-                    for(int j=0; j<table[0].length; j++) {
+                    for (int j = 0; j < newTable[0].length; j++) {
                         if(table[0][j] != evidence[0][i]) //so we need to copy this column to the result (left it)
                             for(int k=0; k<newTable.length; k++)
                                 newTable[k][newTable_count] = table[k][j];
