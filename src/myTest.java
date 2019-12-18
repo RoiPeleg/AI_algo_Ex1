@@ -15,7 +15,7 @@ public class myTest {
         ve.join_factors(FC, FC.getFactor_collection().get(2), FC.getFactor_collection().get(3), 'A');
         for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();*/
 
-        char[][] values = {{'E', 'B', 'A'},
+        /*char[][] values = {{'E', 'B', 'A'},
                 {'T', 'T', 'T'},
                 {'T', 'F', 'T'},
                 {'F', 'T', 'T'},
@@ -24,25 +24,20 @@ public class myTest {
                 {'T', 'F', 'F'},
                 {'F', 'T', 'F'},
                 {'F', 'F', 'F'}};
-        double[] prob = {0.5985, 0.1827, 0.5922, 0.00063, 0.000025, 0.000355, 0.00003, 0.0004995};
+        double[] prob = {0.5985, 0.1827, 0.5922, 0.00063, 0.000025, 0.000355, 0.00003, 0.0004995};*/
 
         char[][]evidence = {{'J','M'},
                 {'t','t'}};
         NodeCollection NC = Parser.toConstruct();
 
         FactorCollection FC = new FactorCollection(NC,evidence);
-        FactorCollection.Factor f = FC.new Factor(values, prob);
 
-        //for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
-
-        VariableElimination.eliminate_factors(FC, NC.nodes[2], f);
-        System.out.println("after eli ............................");
-        for (int i = 0; i < FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
-        /*
         VariableElimination.join_factors(FC,FC.getFactor_collection().get(3),FC.getFactor_collection().get(4),'A');
         VariableElimination.join_factors(FC,FC.getFactor_collection().get(2),FC.getFactor_collection().get(3),'A');
+        VariableElimination.eliminate_factors(FC, NC.nodes[2], FC.getFactor_collection().get(2));
+
         for(int i=0; i< FC.getSize(); i++) FC.getFactor_collection().get(i).visualPrint();
-        */
+
         /*Parser p = new Parser();
         try{
             StringBuilder sb = p.getInput("C:\\Users\\user\\IdeaProjects\\AI_algorithms\\src\\input.txt");

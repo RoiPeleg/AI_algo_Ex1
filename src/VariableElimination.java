@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class VariableElimination {
+
+    private int numOfMul = 0; //count the number of multiplies
+    private int numOfAdd = 0; //count the number of plus
 
     //methods on Factors for VARIABLE ELIMINATION algorithm
     public static void join_factors(FactorCollection FC, FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
@@ -29,7 +33,7 @@ public class VariableElimination {
                         }
             } else {
                 while(valuesRowCount < values.length) {
-                    int ARowCount = 0;
+                    int ARowCount = 1;
                     while(ARowCount < A.getFactor_values().length) {
                         values[valuesRowCount][valuesColCount] = A.getFactor_values()[ARowCount][i];
                         ARowCount ++;
@@ -110,7 +114,7 @@ public class VariableElimination {
         return -1;
     }
 
-    public static void eliminate_factors(FactorCollection FC, NodeCollection.Node toRemove, FactorCollection.Factor factor){
+    public static void eliminate_factors(FactorCollection FC, NodeCollection.Node toRemove, FactorCollection.Factor factor) {
         char c = toRemove.getName();
         int numberOfVals = toRemove.getValues().length;//T/F etc..
         char[][] vals = factor.getFactor_values();
@@ -133,31 +137,24 @@ public class VariableElimination {
         {
             sum[i]= given[i] + given[i+size-1];
         }
-        System.out.println("chars:");
-        for (int i = 0; i < chars.length; i++) {
-            for (int j = 0; j < chars[i].length; j++) {
-                System.out.print(chars[i][j]);
-            }
-            System.out.println();
-        }
-        for(int i=0;i<sum.length;i++)
-        {
-            System.out.println(sum[i]);
-        }
         factor.setFactor_values(chars);
         factor.setFactor_prob(sum);
         factor.setFactorOf(chars[0]);
-        FC.addFactor(factor);
     }
 
     public static void normalization(FactorCollection.Factor f){;}
 
-    public static FactorCollection.Factor[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors){
-       return new FactorCollection.Factor[0];
+    public static int[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors){
+        return new int[0];
+       //always 2 rows:
+        // 0 = the index of the first factor to join
+        // 1 = the index of second factor
     };
 
     //main function: Variable Elimination
     public static String variableElimination(NodeCollection NC, String query) {
+
+        //set query
         if (!query.contains("(")) return "yes";
         String[] s = query.split("\\)")[0].replace("P", "").replace("(", "").split("\\|");
         String Q = s[0];
@@ -174,26 +171,30 @@ public class VariableElimination {
         //init factors
         FactorCollection FC = new FactorCollection(NC,evidence);
         for(char hidden : gOrder) {
+
             //find all the factors that are factors of the hidden variable
             ArrayList<FactorCollection.Factor> H_factors = new ArrayList<FactorCollection.Factor>();
             for(FactorCollection.Factor factor : FC.getFactor_collection())
-                if (factor.getFactorOf().contains(hidden))
+                if (factor.getFactorOf().contains(NC.convertToItsNode(hidden)))
                     H_factors.add(factor);
+
             //choose which 2 factors to join every time (until there is only one factor in the list)
             while(H_factors.size() > 1) {
-                FactorCollection.Factor[] optimalOrder = optimalOrderToJoin(H_factors);
-                join_factors(FC, optimalOrder[0], optimalOrder[1], hidden); //choose if i send the right vars!!!!
+                int[] index_in_H_factors = optimalOrderToJoin(H_factors);
+                int index_of_first_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[0]));
+                int index_of_second_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[1]));
+                join_factors(FC, FC.getFactor_collection().get(index_of_first_factor), FC.getFactor_collection().get(index_of_second_factor), hidden);
+
                 //remove the factors from H_factors
+                H_factors.remove(index_in_H_factors[0]);
+                H_factors.remove(index_in_H_factors[1]);
             }
+
+            //eliminate hidden
+            int index_in_FC = FC.getFactor_collection().indexOf(H_factors.get(0)); //there is only one factor there
+            eliminate_factors(FC, NC.convertToItsNode(hidden), FC.getFactor_collection().get(index_in_FC));
         }
 
-
-        //while there are still hidden variables:
-          //pick hidden variable H (he gave us the order)
-          //find all the factors that are factors of H
-          //optimal order to join the factors
-          //join every 2 factors till the end
-          //eliminate H
         //join all remains factors and normalize
         return "";
     }
