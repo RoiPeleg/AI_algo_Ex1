@@ -85,19 +85,22 @@ public class VariableElimination {
         return -1;
     }
 
-    public static void eliminate_factors(NodeCollection.Node toRemove, FactorCollection.Factor factor){
+    public static void eliminate_factors(FactorCollection FC, NodeCollection.Node toRemove, FactorCollection.Factor factor){
         char c = toRemove.getName();
         int numberOfVals = toRemove.getValues().length;//T/F etc..
         char[][] vals = factor.getFactor_values();
+        System.out.println(vals[0].length);
+        System.out.println(vals.length);
         double[] given = factor.getFactor_prob();
-        int size = (int) Math.pow(numberOfVals,vals.length);//size to be removed
-        char[][] chars = new char[vals.length-1][size];
-        double [] sum = new double[size];
+        int size = (int) Math.pow(vals[0].length-1,numberOfVals)+1;//size to be removed
+        char[][] chars = new char[size][vals[0].length-1];
+        double [] sum = new double[size-1];
         int col = 0;//col of toremove
-        for(int i=0;i<chars.length;i++)//copies first row
+        for(int i=0;i<chars[0].length;i++)
         {
-            for(int j =0;j<chars[0].length;i++)
-                chars[i][j] = vals[i][j];
+            for(int j =0;j<chars.length;j++) {
+                chars[j][i] = vals[j][i];
+            }
         }
         for(int i=0;i<vals[0].length;i++)//finds column of toremove
         {
@@ -105,24 +108,55 @@ public class VariableElimination {
         }
         for(int i =0;i<vals.length/numberOfVals;i++)//sums up needed probs
         {
-            sum[i]= given[i] + given[i+size];
+            sum[i]= given[i] + given[i+size-1];
+        }
+        for(int i=0;i<sum.length;i++)
+        {
+            System.out.println(sum[i]);
         }
         factor.setFactor_values(chars);
         factor.setFactor_prob(sum);
+        factor.setFactorOf(chars[0]);
     }
 
     public static void normalization(FactorCollection.Factor f){;}
 
-    public static void optimalOrderToJoin(FactorCollection.Factor[] factor_collection){;}
+    public static FactorCollection.Factor[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors){
+       return new FactorCollection.Factor[0];
+    };
 
     //main function: Variable Elimination
     public static String variableElimination(NodeCollection NC, String query) {
         if (!query.contains("(")) return "yes";
         String[] s = query.split("\\)")[0].replace("P", "").replace("(", "").split("\\|");
         String Q = s[0];
-        String[] evidence = s[1].split("\\,");
+        String[] evidenceStr = s[1].split("\\,");
+        char[][] evidence = new char[2][evidenceStr.length];
+        for(int i=0; i<evidenceStr.length; i++) {
+            evidence[0][i] = evidenceStr[i].charAt(0);
+            evidence[1][i] = evidenceStr[i].charAt(2);
+        }
         String[] givenOrder = query.split("\\)")[1].replaceFirst("\\,", "").split("-");
+        char[] gOrder = new char[givenOrder.length];
+        for(int i=0;i<givenOrder.length;i++)gOrder[i]=givenOrder[i].charAt(0);
+
         //init factors
+        FactorCollection FC = new FactorCollection(NC,evidence);
+        for(char hidden : gOrder) {
+            //find all the factors that are factors of the hidden variable
+            ArrayList<FactorCollection.Factor> H_factors = new ArrayList<FactorCollection.Factor>();
+            for(FactorCollection.Factor factor : FC.getFactor_collection())
+                if (factor.getFactorOf().contains(hidden))
+                    H_factors.add(factor);
+            //choose which 2 factors to join every time (until there is only one factor in the list)
+            while(H_factors.size() > 1) {
+                FactorCollection.Factor[] optimalOrder = optimalOrderToJoin(H_factors);
+                join_factors(FC, optimalOrder[0], optimalOrder[1], hidden); //choose if i send the right vars!!!!
+                //remove the factors from H_factors
+            }
+        }
+
+
         //while there are still hidden variables:
           //pick hidden variable H (he gave us the order)
           //find all the factors that are factors of H
