@@ -1,8 +1,5 @@
-import org.omg.CORBA.INTERNAL;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 public class VariableElimination {
 
@@ -204,6 +201,9 @@ public class VariableElimination {
         if (!query.contains("(")) return "yes";
         String[] s = query.split("\\)")[0].replace("P", "").replace("(", "").split("\\|");
         String Q = s[0];
+
+        System.out.println(Q);
+
         String[] evidenceStr = s[1].split("\\,");
         char[][] evidence = new char[2][evidenceStr.length];
         for(int i=0; i<evidenceStr.length; i++) {
@@ -241,10 +241,14 @@ public class VariableElimination {
             eliminate_factors(FC, NC.convertToItsNode(hidden), FC.getFactor_collection().get(index_in_FC));
         }
 
-        //join all remains factors and normalize
-        for(int i=0; i<FC.getSize(); i++) {
-            normalization(FC, FC.getFactor_collection().get(i));
+        //join all remains factors (if exist)
+        while(FC.getSize() > 1) { //so there are some factors of the query variable
+            int[] index_in_FC = optimalOrderToJoin(FC.getFactor_collection(), Q.charAt(0));
+            join_factors(FC, FC.getFactor_collection().get(index_in_FC[0]), FC.getFactor_collection().get(index_in_FC[1]), Q.charAt(0));
         }
-        return "";
+        //and normalize
+        normalization(FC, FC.getFactor_collection().get(0));//there is only one last factor in the FC, for sure...
+        String res = "";
+        return res;
     }
 }
