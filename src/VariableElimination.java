@@ -1,3 +1,5 @@
+import org.omg.CORBA.INTERNAL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -153,14 +155,14 @@ public class VariableElimination {
         factor.setFactorOf(chars[0]);
     }
 
-    public static void normalization(FactorCollection.Factor f){;}
+    public static void normalization(FactorCollection FC, FactorCollection.Factor f){;}
 
     public static int[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors, char hidden){
         int[] optimalIndex = new int[2];
         //the array we return is always 2 rows length:
         // 0 = the index of the first factor to join in H_factors arrayList
         // 1 = the index of second factor
-        int min = sizeOfRows(H_factors.get(0), H_factors.get(1), hidden);
+        int min = Integer.MAX_VALUE;
         for (int i = 0; i < H_factors.size(); i++) {
             for (int j = i + 1; j < H_factors.size(); j++) {
                 int x = sizeOfRows(H_factors.get(i), H_factors.get(j), hidden);
@@ -168,6 +170,27 @@ public class VariableElimination {
                     min = x;
                     optimalIndex[0] = i;
                     optimalIndex[1] = j;
+                }
+                if(x == min) {
+                    int ASCII_curr_min = 0, ASCII_new = 0;
+                    //calculate the ascii sum of the current factors that selected
+                    for(int f = 0; f < H_factors.get(optimalIndex[0]).getFactor_values()[0].length; f++)
+                        ASCII_curr_min += (int) H_factors.get(optimalIndex[0]).getFactor_values()[0][f];
+                    for(int s = 0; s < H_factors.get(optimalIndex[1]).getFactor_values()[0].length; s++)
+                        if (indexOfVal(H_factors.get(optimalIndex[0]).getFactor_values()[0], H_factors.get(optimalIndex[1]).getFactor_values()[0][s]) == -1)
+                            ASCII_curr_min += (int) H_factors.get(optimalIndex[1]).getFactor_values()[0][s];
+                    //calculate the ascii sum of the new factors that we may select
+                    for(int n = 0; n < H_factors.get(i).getFactor_values()[0].length; n++)
+                        ASCII_new += (int) H_factors.get(i).getFactor_values()[0][n];
+                    for(int k = 0; k < H_factors.get(j).getFactor_values()[0].length; k++)
+                        if (indexOfVal(H_factors.get(i).getFactor_values()[0], H_factors.get(j).getFactor_values()[0][k]) == -1)
+                            ASCII_new += (int) H_factors.get(j).getFactor_values()[0][k];
+                    //choose the minimum ascii sum
+                    if(ASCII_new < ASCII_curr_min) {
+                        min = x;
+                        optimalIndex[0] = i;
+                        optimalIndex[1] = j;
+                    }
                 }
             }
         }
@@ -219,6 +242,9 @@ public class VariableElimination {
         }
 
         //join all remains factors and normalize
+        for(int i=0; i<FC.getSize(); i++) {
+            normalization(FC, FC.getFactor_collection().get(i));
+        }
         return "";
     }
 }
