@@ -76,7 +76,7 @@ public class VariableElimination {
         return counter;
     }
 
-    private static int sizeOfRows(FactorCollection.Factor A, FactorCollection.Factor B, char var) { //check!!!!!
+    private static int sizeOfRows(FactorCollection.Factor A, FactorCollection.Factor B, char var) {
         int a_col = -1, b_col = -1; //the column in each factor that belongs to var
         for(int i=0; i<A.getFactor_values()[0].length; i++) { //to find the column of var in Factor A
             if (A.getFactor_values()[0][i] == var) {
@@ -115,6 +115,7 @@ public class VariableElimination {
     }
 
     public static void eliminate_factors(FactorCollection FC, NodeCollection.Node toRemove, FactorCollection.Factor factor) {
+        if(factor.getFactorOf().size() == 1) return;
         char c = toRemove.getName();
         int numberOfVals = toRemove.getValues().length;//T/F etc..
         char[][] vals = factor.getFactor_values();
@@ -154,25 +155,24 @@ public class VariableElimination {
 
     public static void normalization(FactorCollection.Factor f){;}
 
-    public static int[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors){
-        int[] t = new int[2];
-        int max = H_factors.get(0).getFactor_prob().length * H_factors.get(1).getFactor_prob().length;
+    public static int[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors, char hidden){
+        int[] optimalIndex = new int[2];
+        //the array we return is always 2 rows length:
+        // 0 = the index of the first factor to join in H_factors arrayList
+        // 1 = the index of second factor
+        int min = sizeOfRows(H_factors.get(0), H_factors.get(1), hidden);
         for (int i = 0; i < H_factors.size(); i++) {
-            for (int j = 0; j < H_factors.size(); j++) {
-                if (j == i) continue;
-                int x = H_factors.get(i).getFactor_prob().length * H_factors.get(j).getFactor_prob().length;
-                if (max < x) {
-                    max = x;
-                    t[0] = i;
-                    t[1] = j;
+            for (int j = i + 1; j < H_factors.size(); j++) {
+                int x = sizeOfRows(H_factors.get(i), H_factors.get(j), hidden);
+                if (x < min) {
+                    min = x;
+                    optimalIndex[0] = i;
+                    optimalIndex[1] = j;
                 }
             }
         }
-        return t;
-       //always 2 rows:
-        // 0 = the index of the first factor to join
-        // 1 = the index of second factor
-    };
+        return optimalIndex;
+    }
 
     //main function: Variable Elimination
     public static String variableElimination(NodeCollection NC, String query) {
@@ -203,7 +203,7 @@ public class VariableElimination {
 
             //choose which 2 factors to join every time (until there is only one factor in the list)
             while(H_factors.size() > 1) {
-                int[] index_in_H_factors = optimalOrderToJoin(H_factors);
+                int[] index_in_H_factors = optimalOrderToJoin(H_factors, hidden);
                 int index_of_first_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[0]));
                 int index_of_second_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[1]));
                 join_factors(FC, FC.getFactor_collection().get(index_of_first_factor), FC.getFactor_collection().get(index_of_second_factor), hidden);
