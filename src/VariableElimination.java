@@ -46,8 +46,9 @@ public class VariableElimination {
         if(valuesColCount != values[0].length) { //so there are variables on B that are not exist on A
             for (int i = 0; i < B.getFactor_values()[0].length; i++) {
                 if (indexOfVal(A.getFactor_values()[0], B.getFactor_values()[0][i]) == -1) { //not exist in A
+                    values[0][valuesColCount] = B.getFactor_values()[0][i];
                     while(valuesRowCount < values.length) {
-                        int BRowCount = 0;
+                        int BRowCount = 1;
                         while (BRowCount < values[0].length) {
                             values[valuesRowCount][valuesColCount] = B.getFactor_values()[BRowCount][i];
                             BRowCount ++;
@@ -248,11 +249,8 @@ public class VariableElimination {
                 join_factors(FC, FC.getFactor_collection().get(index_of_first_factor), FC.getFactor_collection().get(index_of_second_factor), hidden);
 
                 //update H_factors
-                //FactorCollection.Factor firstElementToRemove = H_factors.get(index_in_H_factors[0]);
-                FactorCollection.Factor secondElementToRemove = H_factors.get(index_in_H_factors[1]);
-                //H_factors.remove(firstElementToRemove);
-                H_factors.remove(secondElementToRemove);
-                //H_factors.add(FC.getFactor_collection().get(index_of_first_factor));
+                FactorCollection.Factor elementToRemove = H_factors.get(index_in_H_factors[1]);
+                H_factors.remove(elementToRemove);
             }
 
             //eliminate hidden
