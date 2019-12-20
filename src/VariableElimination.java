@@ -48,7 +48,7 @@ public class VariableElimination {
                 if (indexOfVal(A.getFactor_values()[0], B.getFactor_values()[0][i]) == -1) { //not exist in A
                     while(valuesRowCount < values.length) {
                         int BRowCount = 0;
-                        while(BRowCount < B.getFactor_values().length) {
+                        while (BRowCount < values[0].length) {
                             values[valuesRowCount][valuesColCount] = B.getFactor_values()[BRowCount][i];
                             BRowCount ++;
                             valuesRowCount ++;
@@ -84,6 +84,8 @@ public class VariableElimination {
             }
         }
         for(int j=0; j<B.getFactor_values()[0].length; j++) { //to find the column of var in Factor B
+            B.visualPrint();
+            System.out.println(B.getFactor_values()[0][j] + " " + var);
             if (B.getFactor_values()[0][j] == var) {
                 b_col = j;
                 break;
@@ -95,8 +97,10 @@ public class VariableElimination {
         for(int val=0; val<values.length; val++) //Loop that goes through all possible values of var
             for(int i = 1; i < A.getFactor_values().length; i++) //Loop that goes through all the a_col column in Factor A
                 if(A.getFactor_values()[i][a_col] == values[val])
-                    for(int j = 1; j < B.getFactor_values().length; j++) //Loop that goes through all the b_col column in Factor B
-                        if(B.getFactor_values()[j][b_col] == values[val]) counter++;
+                    for (int j = 1; j < B.getFactor_values().length; j++) {//Loop that goes through all the b_col column in Factor B
+                        System.out.println(val + " " + b_col);
+                        if (B.getFactor_values()[j][b_col] == values[val]) counter++;
+                    }
         return counter + 1; //+1 because there is also the first row (index 0) of variables' names.
     }
 
@@ -233,12 +237,14 @@ public class VariableElimination {
 
                 //remove the factors from H_factors
                 H_factors.remove(index_in_H_factors[0]);
-                H_factors.remove(index_in_H_factors[1]);
+                H_factors.remove(index_in_H_factors[1] - 1);
             }
 
             //eliminate hidden
-            int index_in_FC = FC.getFactor_collection().indexOf(H_factors.get(0)); //there is only one factor there
-            eliminate_factors(FC, NC.convertToItsNode(hidden), FC.getFactor_collection().get(index_in_FC));
+            if (H_factors.size() != 0) {
+                int index_in_FC = FC.getFactor_collection().indexOf(H_factors.get(0)); //there is only one factor there
+                eliminate_factors(FC, NC.convertToItsNode(hidden), FC.getFactor_collection().get(index_in_FC));
+            }
         }
 
         //join all remains factors (if exist)
