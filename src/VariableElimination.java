@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class VariableElimination {
 
@@ -117,13 +118,16 @@ public class VariableElimination {
 
     public static void eliminate_factors(FactorCollection FC, NodeCollection.Node toRemove, FactorCollection.Factor factor) {
         if(factor.getFactorOf().size() == 1) return;
+        Iterator<NodeCollection.Node> F = factor.getFactorOf().iterator();
+        while (F.hasNext()) System.out.print(F.next().getName());
+        System.out.println();
         char c = toRemove.getName();
         int numberOfVals = toRemove.getValues().length;//T/F etc..
         char[][] vals = factor.getFactor_values();
         double[] given = factor.getFactor_prob();
         int size = (int) Math.pow(vals[0].length-1,numberOfVals)+1;//size to be removed
         char[][] chars = new char[size][vals[0].length-1];
-        double [] sum = new double[size-1];
+        double[] sum = new double[size];
         int col = 0;//col of toremove
         for (int i = 0; i < vals[0].length; i++)//finds column of toremove
         {
@@ -141,15 +145,19 @@ public class VariableElimination {
             k = 0;
             m++;
         }
+        for (int i = 0; i < chars.length; i++) {
+            for (int j = 0; j < chars[0].length; j++) {
+                System.out.print(chars[i][j]);
+            }
+            System.out.println();
+        }
         for (int i = 1; i < sum.length; i++)//sums up needed probs
         {
             double s = 0;
             for (int j = 0; j < numberOfVals; j++) {
                 s += given[i + j];
-                System.out.print("+" + given[i + j]);
             }
             sum[i] = s;
-            System.out.println();
         }
         factor.setFactor_values(chars);
         factor.setFactor_prob(sum);
@@ -174,6 +182,7 @@ public class VariableElimination {
         //the array we return is always 2 rows length:
         // 0 = the index of the first factor to join in H_factors arrayList
         // 1 = the index of second factor
+
         if(H_factors.size() == 2) {
             optimalIndex[0] = 0;
             optimalIndex[1] = 1;
@@ -252,7 +261,6 @@ public class VariableElimination {
                 FactorCollection.Factor elementToRemove = H_factors.get(index_in_H_factors[1]);
                 H_factors.remove(elementToRemove);
             }
-
             //eliminate hidden
             if (H_factors.size() != 0) {
                 int index_in_FC = FC.getFactor_collection().indexOf(H_factors.get(0)); //there is only one factor there
@@ -261,7 +269,7 @@ public class VariableElimination {
         }
 
         //join all remains factors (if exist)
-        while(FC.getSize() > 1) { //so there are some factors of the query variable
+        while (FC.getSize() > 1) { //so there are some factors of the query variable
             int[] index_in_FC = optimalOrderToJoin(FC.getFactor_collection(), Q.charAt(0));
             join_factors(FC, FC.getFactor_collection().get(index_in_FC[0]), FC.getFactor_collection().get(index_in_FC[1]), Q.charAt(0));
         }
