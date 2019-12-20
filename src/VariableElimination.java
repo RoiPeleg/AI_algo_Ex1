@@ -3,8 +3,8 @@ import java.util.ArrayList;
 
 public class VariableElimination {
 
-    private int numOfMul = 0; //count the number of multiplies
-    private int numOfAdd = 0; //count the number of plus
+    private static int numOfMul = 0; //count the number of multiplies
+    private static int numOfAdd = 0; //count the number of plus
 
     //methods on Factors for VARIABLE ELIMINATION algorithm
     public static void join_factors(FactorCollection FC, FactorCollection.Factor A, FactorCollection.Factor B, char varToJoin) {
@@ -205,9 +205,6 @@ public class VariableElimination {
         if (!query.contains("(")) return "yes";
         String[] s = query.split("\\)")[0].replace("P", "").replace("(", "").split("\\|");
         String Q = s[0];
-
-        System.out.println(Q);
-
         String[] evidenceStr = s[1].split("\\,");
         char[][] evidence = new char[2][evidenceStr.length];
         for(int i=0; i<evidenceStr.length; i++) {
@@ -253,8 +250,22 @@ public class VariableElimination {
             join_factors(FC, FC.getFactor_collection().get(index_in_FC[0]), FC.getFactor_collection().get(index_in_FC[1]), Q.charAt(0));
         }
         //and normalize
-        normalization(FC, FC.getFactor_collection().get(0));//there is only one last factor in the FC, for sure...
+        normalization(FC, FC.getFactor_collection().get(0)); //there is only one last factor in the FC, for sure...
+
         String res = "";
+
+        char Q_val = Q.charAt(2); //the first char of the value of the Query variable (what we need to find in the factor that lefts).
+        int row = 0; //we'll find the row in the factor_values that has the answer.
+        //certainty there is only ONE COLUMN - of the QUERY variable !!
+        for(int i=1; i<FC.getFactor_collection().get(0).getFactor_values().length; i++)
+            if(FC.getFactor_collection().get(0).getFactor_values()[i][0] == Q_val) {
+                row = i;
+                break;
+            }
+        double prob_ans = FC.getFactor_collection().get(0).getFactor_prob()[row -1];
+        res+= String.format("%.5g%n", prob_ans);
+        res+= "," + Integer.toString(numOfAdd) + "," + Integer.toString(numOfMul);
+
         return res;
     }
 }
