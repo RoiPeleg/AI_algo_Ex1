@@ -84,8 +84,6 @@ public class VariableElimination {
             }
         }
         for(int j=0; j<B.getFactor_values()[0].length; j++) { //to find the column of var in Factor B
-            B.visualPrint();
-            System.out.println(B.getFactor_values()[0][j] + " " + var);
             if (B.getFactor_values()[0][j] == var) {
                 b_col = j;
                 break;
@@ -97,10 +95,9 @@ public class VariableElimination {
         for(int val=0; val<values.length; val++) //Loop that goes through all possible values of var
             for(int i = 1; i < A.getFactor_values().length; i++) //Loop that goes through all the a_col column in Factor A
                 if(A.getFactor_values()[i][a_col] == values[val])
-                    for (int j = 1; j < B.getFactor_values().length; j++) {//Loop that goes through all the b_col column in Factor B
-                        System.out.println(val + " " + b_col);
+                    for (int j = 1; j < B.getFactor_values().length; j++) //Loop that goes through all the b_col column in Factor B
                         if (B.getFactor_values()[j][b_col] == values[val]) counter++;
-                    }
+
         return counter + 1; //+1 because there is also the first row (index 0) of variables' names.
     }
 
@@ -163,6 +160,11 @@ public class VariableElimination {
         //the array we return is always 2 rows length:
         // 0 = the index of the first factor to join in H_factors arrayList
         // 1 = the index of second factor
+        if(H_factors.size() == 2) {
+            optimalIndex[0] = 0;
+            optimalIndex[1] = 1;
+            return optimalIndex;
+        }
         int min = Integer.MAX_VALUE;
         for (int i = 0; i < H_factors.size(); i++) {
             for (int j = i + 1; j < H_factors.size(); j++) {
@@ -209,7 +211,7 @@ public class VariableElimination {
         char[][] evidence = new char[2][evidenceStr.length];
         for(int i=0; i<evidenceStr.length; i++) {
             evidence[0][i] = evidenceStr[i].charAt(0);
-            evidence[1][i] = evidenceStr[i].toUpperCase().charAt(2);
+            evidence[1][i] = evidenceStr[i].charAt(2);
         }
         String[] givenOrder = query.split("\\)")[1].replaceFirst("\\,", "").split("-");
         char[] gOrder = new char[givenOrder.length];
@@ -232,9 +234,12 @@ public class VariableElimination {
                 int index_of_second_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[1]));
                 join_factors(FC, FC.getFactor_collection().get(index_of_first_factor), FC.getFactor_collection().get(index_of_second_factor), hidden);
 
-                //remove the factors from H_factors
-                H_factors.remove(index_in_H_factors[0]);
-                H_factors.remove(index_in_H_factors[1] - 1);
+                //update H_factors
+                //FactorCollection.Factor firstElementToRemove = H_factors.get(index_in_H_factors[0]);
+                FactorCollection.Factor secondElementToRemove = H_factors.get(index_in_H_factors[1]);
+                //H_factors.remove(firstElementToRemove);
+                H_factors.remove(secondElementToRemove);
+                //H_factors.add(FC.getFactor_collection().get(index_of_first_factor));
             }
 
             //eliminate hidden
