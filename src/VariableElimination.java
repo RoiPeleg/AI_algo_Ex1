@@ -145,15 +145,28 @@ public class VariableElimination {
             double s = 0;
             for (int j = 0; j < numberOfVals; j++) {
                 s += given[i + j];
+                System.out.print("+" + given[i + j]);
             }
             sum[i] = s;
+            System.out.println();
         }
         factor.setFactor_values(chars);
         factor.setFactor_prob(sum);
         factor.setFactorOf(chars[0]);
     }
 
-    public static void normalization(FactorCollection FC, FactorCollection.Factor f){;}
+    public static void normalization(FactorCollection FC, FactorCollection.Factor f) {
+        FactorCollection.Factor factor = FC.getFactor_collection().get(0);
+        double[] c = factor.getFactor_prob();
+        double sum = 0;
+        for (int i = 0; i < c.length; i++) {
+            sum += c[i];
+        }
+        for (int i = 0; i < c.length; i++) {
+            c[i] = c[i] / sum;
+        }
+        factor.setFactor_prob(c);
+    }
 
     public static int[] optimalOrderToJoin(ArrayList<FactorCollection.Factor> H_factors, char hidden){
         int[] optimalIndex = new int[2];
