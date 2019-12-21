@@ -9,6 +9,7 @@ public class Ex1 {
         for (int i=0;i<q.length;i++)
         {
             // System.out.println("q"+i + ") "+q[i]);
+            System.out.println(VariableElimination.variableElimination(nc, q[i]));
             ls.add(VariableElimination.variableElimination(nc,q[i]));
         }
         try {

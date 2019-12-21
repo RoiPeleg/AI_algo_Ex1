@@ -32,6 +32,7 @@ public class VariableElimination {
                         if (shorter.getFactor_values()[k][indexInShort] == longer.getFactor_values()[j][i]) {
                             values[valuesRowCount][valuesColCount] = shorter.getFactor_values()[k][indexInShort];
                             prob[valuesRowCount - 1] = shorter.getFactor_prob()[k - 1] * longer.getFactor_prob()[j - 1];
+                            numOfMul++;
                             valuesRowCount++;
                             if (valuesRowCount == values.length) {
                                 valuesRowCount = 1;
@@ -166,6 +167,7 @@ public class VariableElimination {
                     }
                 }
                 prob[valuesRowCount - 1] += factor.getFactor_prob()[i - 1];
+                numOfAdd++;
                 comb_counter = 0;
 
                 for (int k = i + 1; k < factor.getFactor_values().length; k++) {
@@ -178,6 +180,7 @@ public class VariableElimination {
                     }
                     if (Arrays.equals(comb, combToCompare)) { //we this is a "twin" row
                         prob[valuesRowCount - 1] += factor.getFactor_prob()[k - 1];
+                        numOfAdd++;
                         treatedRows.add(k);
                     }
                 }
@@ -199,6 +202,7 @@ public class VariableElimination {
         }
         for (int i = 0; i < c.length; i++) {
             c[i] = c[i] / sum;
+            numOfAdd++;
         }
         factor.setFactor_prob(c);
     }
@@ -314,9 +318,8 @@ public class VariableElimination {
                 break;
             }
         double prob_ans = FC.getFactor_collection().get(0).getFactor_prob()[row -1];
-        res+= String.format("%.5g%n", prob_ans);
+        res += String.format("%.5g", prob_ans);
         res+= "," + Integer.toString(numOfAdd) + "," + Integer.toString(numOfMul);
-
         return res;
     }
 }
