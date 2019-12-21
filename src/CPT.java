@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CPT {
 
@@ -150,6 +151,54 @@ public class CPT {
             else
                 System.out.println(" "+ getCPT_prob()[i-1]);
         }
+    }
+
+    /**
+     * Method that checks if the CPT contains the answer to the Query
+     * @param evidence = 2D array of evidence variables:
+     *                 row - 0: the variables names.
+     *                 row - 1: the variables values (that given as evidence)
+     * @param Q = a string that represents the query variable (name) and it's value [in form of: "Q=value"]
+     * @return the query's answer if it's exist in the CPT
+     *         an empty string "" if we can't answer the query.
+     */
+    public String isAnswerQuery(char[][] evidence, String Q) {
+        char[] comb = new char[evidence[0].length + 1]; //the size is the number of evidence variables + the query.
+        int comb_count = 0;
+        char[] combToCompare = new char[comb.length];
+        if(countEvidence(evidence) != 0) {
+            for (int j = 0; j < this.CPT_values[0].length; j++) {
+                char val = CPT_values[0][j];
+                if (val == Q.charAt(0)) {
+                    comb[comb_count] = Q.charAt(2);
+                    comb_count++;
+                }
+                if (indexVal(evidence[0], val) != -1) {
+                    comb[comb_count] = evidence[1][indexVal(evidence[0], val)];
+                    comb_count++;
+                }
+            }
+            comb_count = 0;
+            for(int i = 1; i < this.CPT_values.length; i++) {
+                for(int j = 0; j < this.CPT_values[0].length; j++) {
+                    if (CPT_values[0][j] == Q.charAt(0) || indexVal(evidence[0], CPT_values[0][j]) != -1) {
+                        combToCompare[comb_count] = CPT_values[i][j];
+                        comb_count++;
+                    }
+                }
+                if(Arrays.equals(comb,combToCompare)) {
+                    String p = String.format("%.5g", CPT_prob[i - 1]);
+                    return p+",0,0";
+                }
+            }
+        }
+        return "";
+    }
+
+    private int indexVal(char[] arr, char c) {
+        for(int i=0; i<arr.length; i++)
+            if(arr[i] == c) return i;
+        return -1;
     }
 
 }
