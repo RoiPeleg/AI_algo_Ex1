@@ -267,6 +267,11 @@ public class VariableElimination {
             evidence[0][i] = evidenceStr[i].charAt(0);
             evidence[1][i] = evidenceStr[i].charAt(2);
         }
+
+        //if the answer to the Query is exist on the CPT (of the query variable), so we return it without calculate all the things in the algorithm.
+        String ansCPT = NC.convertToItsNode(Q.charAt(0)).getCpt().isAnswerQuery(evidence,Q);
+        if(ansCPT != "") return ansCPT;
+
         String[] givenOrder = query.split("\\)")[1].replaceFirst("\\,", "").split("-");
         char[] gOrder = new char[givenOrder.length];
         for(int i=0;i<givenOrder.length;i++)gOrder[i]=givenOrder[i].charAt(0);
