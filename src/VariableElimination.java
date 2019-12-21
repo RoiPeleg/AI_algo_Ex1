@@ -1,6 +1,6 @@
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 
 public class VariableElimination {
 
@@ -15,28 +15,35 @@ public class VariableElimination {
         double[] prob = new double[values.length - 1];
         int valuesColCount = 0;
         int valuesRowCount = 1;
-        for(int i=0; i<A.getFactor_values()[0].length; i++) {
-            //int indexInB = indexOfVal(B.getFactor_values()[0], A.getFactor_values()[0][i]);
-            int indexInB = findVarInd(B, varToJoin); //(indexInB != -1) because we already checked it!
-            values[0][valuesColCount] = A.getFactor_values()[0][i];
-            if(A.getFactor_values()[0][i] == varToJoin) { //so this var exists on B --> we need to multiply the values to set it on the new factor.
-                for(int j=1; j<A.getFactor_values().length; j++) //runs on all A's rows
-                    for (int k = 1; k < B.getFactor_values().length; k++) //runs on all B's rows
-                        if (B.getFactor_values()[k][indexInB] == A.getFactor_values()[j][i]) {
-                            values[valuesRowCount][valuesColCount] = B.getFactor_values()[k][indexInB];
-                            prob[valuesRowCount - 1] = B.getFactor_prob()[k - 1] * A.getFactor_prob()[j - 1];
+        FactorCollection.Factor longer, shorter;
+        if(B.getFactor_values()[0].length > A.getFactor_values()[0].length) {
+            longer = B;
+            shorter = A;
+        } else {
+            longer = A;
+            shorter = B;
+        }
+        int indexInShort = findVarInd(shorter, varToJoin); //(index != -1) because we already checked it!
+        for(int i=0; i<longer.getFactor_values()[0].length; i++) {
+            values[0][valuesColCount] = longer.getFactor_values()[0][i];
+            if(longer.getFactor_values()[0][i] == varToJoin) { //so this var exists on B --> we need to multiply the values to set it on the new factor.
+                for(int j = 1; j < longer.getFactor_values().length; j++) //runs on all longer's rows
+                    for (int k = 1; k < shorter.getFactor_values().length; k++) //runs on all shorter's rows
+                        if (shorter.getFactor_values()[k][indexInShort] == longer.getFactor_values()[j][i]) {
+                            values[valuesRowCount][valuesColCount] = shorter.getFactor_values()[k][indexInShort];
+                            prob[valuesRowCount - 1] = shorter.getFactor_prob()[k - 1] * longer.getFactor_prob()[j - 1];
                             valuesRowCount++;
                             if (valuesRowCount == values.length) {
-                                valuesRowCount = 1; //0;
+                                valuesRowCount = 1;
                                 valuesColCount++;
                             }
                         }
             } else {
                 while(valuesRowCount < values.length) {
-                    int ARowCount = 1;
-                    while(ARowCount < A.getFactor_values().length) {
-                        values[valuesRowCount][valuesColCount] = A.getFactor_values()[ARowCount][i];
-                        ARowCount ++;
+                    int LongRowCount = 1;
+                    while(LongRowCount < longer.getFactor_values().length) {
+                        values[valuesRowCount][valuesColCount] = longer.getFactor_values()[LongRowCount][i];
+                        LongRowCount ++;
                         valuesRowCount ++;
                     }
                 }
@@ -44,28 +51,42 @@ public class VariableElimination {
                 valuesColCount ++;
             }
         }
-        if(valuesColCount != values[0].length) { //so there are variables on B that are not exist on A
-            for (int i = 0; i < B.getFactor_values()[0].length; i++) {
-                if (indexOfVal(A.getFactor_values()[0], B.getFactor_values()[0][i]) == -1) { //not exist in A
-                    values[0][valuesColCount] = B.getFactor_values()[0][i];
-                    while(valuesRowCount < values.length) {
-                        int BRowCount = 1;
-                        while (BRowCount < values[0].length) {
-                            values[valuesRowCount][valuesColCount] = B.getFactor_values()[BRowCount][i];
-                            BRowCount ++;
-                            valuesRowCount ++;
+        while(valuesColCount < values[0].length) { //so there are variables in shorter factor that are not in the longer factor!
+            int shortCol = 0;
+            char[] var_values;
+            int var_values_count = 0;
+            char[] comb = new char[valuesColCount];
+            char[] combToCompare = new char[comb.length];
+            ArrayList<Integer> treatedRows = new ArrayList<Integer>();
+            while(shortCol < shorter.getFactor_values()[0].length) {
+                if(shortCol != indexInShort) {
+                    values[0][valuesColCount] = shorter.getFactor_values()[0][shortCol];
+                    var_values = FC.getNC().convertToItsNode(values[0][valuesColCount]).getShortValuesNames();
+                    if(valuesRowCount < values.length) {
+                        if(treatedRows.isEmpty() || !treatedRows.contains(valuesRowCount)) {
+                            for(int i=0; i<valuesColCount; i++) comb[i] = values[valuesRowCount][i];
+                            values[valuesRowCount][valuesColCount] = var_values[var_values_count];
+                            var_values_count++;
+                            for(int k=valuesRowCount+1; k<values.length; k++) { //goes over all values' rows
+                                for(int j=0; j<valuesColCount; j++) //goes over all values' columns
+                                    combToCompare[j] = values[k][j];
+                                if(Arrays.equals(comb, combToCompare)) {
+                                    values[k][valuesColCount] = var_values[var_values_count];
+                                    var_values_count++;
+                                    treatedRows.add(k);
+                                }
+                            }
                         }
+                        valuesRowCount++;
                     }
-                    valuesRowCount = 1;
-                    valuesColCount ++;
                 }
+                shortCol++;
             }
+            valuesColCount++;
         }
         A.setFactor_values(values);
         A.setFactor_prob(prob);
         A.setFactorOf(values[0]);
-        System.out.println("join res");
-        A.visualPrint();
         FC.removeFactor(B);
     }
 
@@ -120,50 +141,56 @@ public class VariableElimination {
 
     public static void eliminate_factors(FactorCollection FC, NodeCollection.Node toRemove, FactorCollection.Factor factor) {
         if(factor.getFactorOf().size() == 1) return;
-        char c = toRemove.getName();
-        int numberOfVals = toRemove.getValues().length;//T/F etc..
-        char[][] vals = factor.getFactor_values();
-        double[] given = factor.getFactor_prob();
-        int size = (int) Math.pow(vals[0].length-1,numberOfVals)+1;//size to be removed
-        char[][] chars = new char[size][vals[0].length-1];
-        double[] sum = new double[size];
-        int col = 0;//col of toremove
-        for (int i = 0; i < vals[0].length; i++)//finds column of toremove
-        {
-            if (vals[0][i] == c) col = i;
-        }
-        int k = 0, m = 0;
-        for(int i=0;i<chars[0].length;i++)
-        {
-            if (col == i)
-                continue;
-            chars[k++][m] = vals[0][i];
-            for (int j = 1; j < vals.length; j = j + numberOfVals) {
-                chars[k++][m] = vals[j][i];
+        int rowSize = 1;
+        ArrayList<Character> toLeave = new ArrayList<>();
+        for(char var : factor.getFactor_values()[0])
+            if (var != toRemove.getName()) {
+                rowSize *= FC.getNC().convertToItsNode(var).getValues().length;
+                toLeave.add(var);
             }
-            k = 0;
-            m++;
-        }
-        for (int i = 1; i < sum.length; i++)//sums up needed probs
-        {
-            double s = 0;
-            for (int j = 0; j < numberOfVals; j++) {
-                s += given[i + j];
+        char[][] values = new char[rowSize + 1][factor.getFactor_values()[0].length - 1];
+        for(int i=0; i<toLeave.size(); i++) values[0][i] = toLeave.get(i); //init the first row of values
+        double[] prob = new double[rowSize];
+        char[] comb = new char[values[0].length]; //array that saves value's combination (of the variables that will be in the new factor - not toRemove).
+        char[] combToCompare = new char[values[0].length];
+        int comb_counter = 0;
+        int valuesRowCount = 1;
+        ArrayList<Integer> treatedRows = new ArrayList<Integer>(); //In order not to skip a line whose combination is already within the result factor
+        for(int i=1; i<factor.getFactor_values().length; i++) {
+            if(treatedRows.isEmpty() || !treatedRows.contains(i)) {
+                for (int j = 0; j < factor.getFactor_values()[0].length; j++) {
+                    if (factor.getFactor_values()[0][j] != toRemove.getName()) {
+                        comb[comb_counter] = factor.getFactor_values()[i][j];
+                        values[valuesRowCount][comb_counter] = comb[comb_counter];
+                        comb_counter++;
+                    }
+                }
+                prob[valuesRowCount - 1] += factor.getFactor_prob()[i - 1];
+                comb_counter = 0;
+
+                for (int k = i + 1; k < factor.getFactor_values().length; k++) {
+                    for (int c = 0; c < factor.getFactor_values()[0].length; c++) {
+                        if (factor.getFactor_values()[0][c] != toRemove.getName()) {
+                            combToCompare[comb_counter] = factor.getFactor_values()[k][c];
+                            if(comb_counter < comb.length-1) comb_counter++;
+                            else comb_counter = 0;
+                        }
+                    }
+                    if (Arrays.equals(comb, combToCompare)) { //we this is a "twin" row
+                        prob[valuesRowCount - 1] += factor.getFactor_prob()[k - 1];
+                        treatedRows.add(k);
+                    }
+                }
+                valuesRowCount++;
+                comb_counter = 0;
             }
-            sum[i] = s;
         }
-        for (int i = 0; i < chars.length; i++) {
-            for (int j = 0; j < chars[0].length; j++) {
-                System.out.print(chars[i][j]);
-            }
-            System.out.println();
-        }
-        factor.setFactor_values(chars);
-        factor.setFactor_prob(sum);
-        factor.setFactorOf(chars[0]);
+        factor.setFactor_values(values);
+        factor.setFactor_prob(prob);
+        factor.setFactorOf(values[0]);
     }
 
-    public static void normalization(FactorCollection FC, FactorCollection.Factor f) {
+    public static void normalization(FactorCollection FC) {
         FactorCollection.Factor factor = FC.getFactor_collection().get(0);
         double[] c = factor.getFactor_prob();
         double sum = 0;
@@ -196,7 +223,7 @@ public class VariableElimination {
                     optimalIndex[0] = i;
                     optimalIndex[1] = j;
                 }
-                if(x == min) {
+                else if(x == min) {
                     int ASCII_curr_min = 0, ASCII_new = 0;
                     //calculate the ascii sum of the current factors that selected
                     for(int f = 0; f < H_factors.get(optimalIndex[0]).getFactor_values()[0].length; f++)
@@ -217,6 +244,7 @@ public class VariableElimination {
                         optimalIndex[1] = j;
                     }
                 }
+                else continue;
             }
         }
         return optimalIndex;
@@ -248,23 +276,17 @@ public class VariableElimination {
             for(FactorCollection.Factor factor : FC.getFactor_collection())
                 if (factor.getFactorOf().contains(NC.convertToItsNode(hidden)))
                     H_factors.add(factor);
+
             //choose which 2 factors to join every time (until there is only one factor in the list)
             while(H_factors.size() > 1) {
                 int[] index_in_H_factors = optimalOrderToJoin(H_factors, hidden);
                 int index_of_first_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[0]));
                 int index_of_second_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[1]));
-                System.out.println("join");
-                FC.getFactor_collection().get(index_of_first_factor).visualPrint();
-                System.out.println("and");
-                FC.getFactor_collection().get(index_of_second_factor).visualPrint();
                 join_factors(FC, FC.getFactor_collection().get(index_of_first_factor), FC.getFactor_collection().get(index_of_second_factor), hidden);
+
                 //update H_factors
                 FactorCollection.Factor elementToRemove = H_factors.get(index_in_H_factors[1]);
                 H_factors.remove(elementToRemove);
-            }
-            System.out.println("after join");
-            for (FactorCollection.Factor F : FC.getFactor_collection()) {
-                F.visualPrint();
             }
             //eliminate hidden
             if (H_factors.size() != 0) {
@@ -279,7 +301,7 @@ public class VariableElimination {
             join_factors(FC, FC.getFactor_collection().get(index_in_FC[0]), FC.getFactor_collection().get(index_in_FC[1]), Q.charAt(0));
         }
         //and normalize
-        normalization(FC, FC.getFactor_collection().get(0)); //there is only one last factor in the FC, for sure...
+        normalization(FC); //there is only one last factor in the FC, for sure...
 
         String res = "";
 
