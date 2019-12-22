@@ -34,7 +34,7 @@ public class Parser {
 
     public static NodeCollection toConstruct() { //should gets a sb input
         try {
-            StringBuilder sb = getInput("src/input.txt");
+            StringBuilder sb = getInput("src/input2.txt");
             String [] s = sb.toString().split("Var");
             if(!s[0].contains("Network")) throw new RuntimeException("The input is not representing a Network!");
             NodeCollection NC1 = new NodeCollection(s);

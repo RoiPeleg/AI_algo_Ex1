@@ -42,7 +42,7 @@ public class VariableElimination {
             } else {
                 while(valuesRowCount < values.length) {
                     int LongRowCount = 1;
-                    while(LongRowCount < longer.getFactor_values().length) {
+                    while (LongRowCount < longer.getFactor_values().length && valuesRowCount < values.length) {
                         values[valuesRowCount][valuesColCount] = longer.getFactor_values()[LongRowCount][i];
                         LongRowCount ++;
                         valuesRowCount ++;
@@ -72,7 +72,7 @@ public class VariableElimination {
                             for(int k=valuesRowCount+1; k<values.length; k++) { //goes over all values' rows
                                 for(int j=0; j<valuesColCount; j++) //goes over all values' columns
                                     combToCompare[j] = values[k][j];
-                                if(Arrays.equals(comb, combToCompare)) {
+                                if (Arrays.equals(comb, combToCompare) && var_values_count < var_values.length) {
                                     values[k][valuesColCount] = var_values[var_values_count];
                                     var_values_count++;
                                     treatedRows.add(k);
@@ -161,14 +161,16 @@ public class VariableElimination {
         for(int i=1; i<factor.getFactor_values().length; i++) {
             if(treatedRows.isEmpty() || !treatedRows.contains(i)) {
                 for (int j = 0; j < factor.getFactor_values()[0].length; j++) {
-                    if (factor.getFactor_values()[0][j] != toRemove.getName()) {
+                    if (factor.getFactor_values()[0][j] != toRemove.getName() && valuesRowCount < values.length) {
                         comb[comb_counter] = factor.getFactor_values()[i][j];
                         values[valuesRowCount][comb_counter] = comb[comb_counter];
                         comb_counter++;
                     }
                 }
-                prob[valuesRowCount - 1] += factor.getFactor_prob()[i - 1];
-                numOfAdd++;
+                if (values.length > valuesRowCount) {
+                    prob[valuesRowCount - 1] += factor.getFactor_prob()[i - 1];
+                    numOfAdd++;
+                }
                 comb_counter = 0;
 
                 for (int k = i + 1; k < factor.getFactor_values().length; k++) {
@@ -271,8 +273,8 @@ public class VariableElimination {
         }
 
         //if the answer to the Query is exist on the CPT (of the query variable), so we return it without calculate all the things in the algorithm.
-        String ansCPT = NC.convertToItsNode(Q.charAt(0)).getCpt().isAnswerQuery(evidence,Q);
-        if(ansCPT != "") return ansCPT;
+        // String ansCPT = NC.convertToItsNode(Q.charAt(0)).getCpt().isAnswerQuery(evidence,Q);
+        //if(ansCPT != "") return ansCPT;
 
         String[] givenOrder = query.split("\\)")[1].replaceFirst("\\,", "").split("-");
         char[] gOrder = new char[givenOrder.length];
@@ -282,7 +284,7 @@ public class VariableElimination {
         FactorCollection FC = new FactorCollection(NC,evidence);
 
         for (FactorCollection.Factor F : FC.getFactor_collection()) {
-            //F.visualPrint();
+            // F.visualPrint();
         }
         for (int i = 0; i < NC.getNodes().length; i++) {
             //NC.getNodes()[i].getCpt().visualPrint();
