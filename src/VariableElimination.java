@@ -283,8 +283,6 @@ public class VariableElimination {
         //init factors
         FactorCollection FC = new FactorCollection(NC,evidence);
 
-        for(int i=0;i<FC.getSize();i++) FC.getFactor_collection().get(i).visualPrint();
-
         for(char hidden : gOrder) {
 
             //find all the factors that are factors of the hidden variable
@@ -304,6 +302,9 @@ public class VariableElimination {
                 FactorCollection.Factor elementToRemove = H_factors.get(index_in_H_factors[1]);
                 H_factors.remove(elementToRemove);
             }
+
+            System.out.println("before eli");
+            for(int l=0;l<FC.getSize();l++) FC.getFactor_collection().get(l).visualPrint();
 
             //eliminate hidden
             if (H_factors.size() != 0) {
