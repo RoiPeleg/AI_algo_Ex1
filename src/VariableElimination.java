@@ -47,7 +47,6 @@ public class VariableElimination {
             for (int k = 1; k < B.getFactor_values().length; k++) //runs on all shorter's rows
                 if (A.getFactor_values()[j][indexA] == B.getFactor_values()[k][indexB]) {
                     prob[valuesRowCount - 1] = A.getFactor_prob()[j - 1] * B.getFactor_prob()[k - 1];
-
                     numOfMul++;
                     valuesRowCount++;
                     if (valuesRowCount == values.length) {
@@ -139,7 +138,7 @@ public class VariableElimination {
                 }
                 if (values.length > valuesRowCount) {
                     prob[valuesRowCount - 1] += factor.getFactor_prob()[i - 1];
-                    numOfAdd++;
+                    //numOfAdd++;
                 }
                 comb_counter = 0;
 

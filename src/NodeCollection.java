@@ -9,11 +9,13 @@ public class NodeCollection {
     private int counter = -1;
     private String[] Queries;
 
+    //getters
     public String[] getQueries(){return Queries;}
 
     public Node[] getNodes() {
         return nodes;
     }
+
     //constructor
     public NodeCollection(String[] input) {
         nodes = new Node[input.length - 2];
@@ -104,7 +106,6 @@ public class NodeCollection {
 
             //init CPT
             this.cpt = new CPT(block, this.Name, this.shortValuesNames, this.parents);
-
         }
     }
 
