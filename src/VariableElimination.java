@@ -304,7 +304,7 @@ public class VariableElimination {
                 break;
             }
         double prob_ans = FC.getFactor_collection().get(0).getFactor_prob()[row -1];
-        res += String.format("%.5g", prob_ans);
+        res += String.format("%.5f", prob_ans);
         res+= "," + Integer.toString(numOfAdd) + "," + Integer.toString(numOfMul);
         numOfAdd = 0;
         numOfMul = 0;

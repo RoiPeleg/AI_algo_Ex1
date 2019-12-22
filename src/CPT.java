@@ -188,7 +188,7 @@ public class CPT {
                 }
                 comb_count = 0;
                 if(Arrays.equals(comb,combToCompare)) {
-                    String p = String.format("%.5g", CPT_prob[i - 1]);
+                    String p = String.format("%.5f", CPT_prob[i - 1]);
                     return p+",0,0";
                 }
             }

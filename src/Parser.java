@@ -34,20 +34,11 @@ public class Parser {
 
     public static NodeCollection toConstruct() { //should gets a sb input
         try {
-            StringBuilder sb = getInput("src/input.txt");
+            StringBuilder sb = getInput("input.txt");
             String [] s = sb.toString().split("Var");
             if(!s[0].contains("Network")) throw new RuntimeException("The input is not representing a Network!");
             NodeCollection NC1 = new NodeCollection(s);
             return NC1; //The NodeCollection actually represents a bayesian network
-            /*
-            char[][]evidence = {{'J','M'},
-                    {'t','t'}};
-            FactorCollection FC1 = new FactorCollection(NC1, evidence);
-            //for(int i=0; i< FC1.getSize(); i++) FC1.getFactor_collection().get(i).visualPrint();
-            VariableElimination ve = new VariableElimination();
-            ve.join_factors(FC1.getFactor_collection().get(0),FC1.getFactor_collection().get(2),'B');
-            //NodeCollection NC2 = new NodeCollection(s2);
-             */
         } catch (Exception e) { e.printStackTrace(); }
         return null;
     }
