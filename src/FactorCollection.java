@@ -18,18 +18,17 @@ public class FactorCollection {
     public NodeCollection getNC() {
         return NC;
     }
-    /*public ArrayList<Factor> getOrfer()//should return the given order of nodes
-    {
-        return null;
-    }*/
 
     //constructor
     public FactorCollection(NodeCollection NC, char[][]evidence) {
         this.NC = NC;
         factor_collection = new ArrayList<Factor>();
         for(int i=0; i<NC.nodes.length; i++) {
-            Factor f = new Factor(NC.nodes[i].getCpt(), evidence);
-            addFactor(f);
+            if ((NC.getNodes()[i].getCpt().getCPT_values()[0].length != 1) || (!containsVal(evidence[0], NC.getNodes()[i].getCpt().getCPTof()))) {
+                Factor f = new Factor(NC.nodes[i].getCpt(), evidence);
+                addFactor(f);
+
+            }
         }
         removeOneValued();
     }
@@ -38,6 +37,12 @@ public class FactorCollection {
     public void addFactor(Factor f) {
         factor_collection.add(f);
         size++;
+    }
+
+    private boolean containsVal(char[] arr, char c) {
+        for (int i = 0; i < arr.length; i++)
+            if (arr[i] == c) return true;
+        return false;
     }
 
     private void removeOneValued() {
@@ -99,17 +104,17 @@ public class FactorCollection {
             int count_evidence = T.countEvidence(evidence);
             if (count_evidence != 0) {
                 for (int i = 0; i < evidence[0].length; i++)
-                    for (int j = 0; j < T.getCPT_values()[0].length; j++)
-                        if (evidence[0][i] == T.getCPT_values()[0][j]) {
-                            int factor_count = 1;
-                            for (int k = 1; k < T.getCPT_values().length; k++) {
-                                if (T.getCPT_values()[k][j] != evidence[1][i]) { //so we need to remove this row from the factor
-                                    this.factor_values = remove_row(this.factor_values, factor_count);
-                                    this.factor_prob = remove_value(this.factor_prob, factor_count - 1);
-                                    factor_count--;
+                    for (int j = 0; j < factor_values[0].length; j++)
+                        if (evidence[0][i] == factor_values[0][j]) {
+                            for (int k = 1; k < factor_values.length; k++) {
+                                //System.out.println(factor_values[k][j] + " " +evidence[1][i]);
+                                if (factor_values[k][j] != evidence[1][i]) { //so we need to remove this row from the factor
+                                    this.factor_values = remove_row(this.factor_values, k);
+                                    this.factor_prob = remove_value(this.factor_prob, k - 1);
+                                    k--;
                                 }
-                                factor_count++;
                             }
+
                         }
             }
             if(count_evidence != 0) { //the factor contains evidence
@@ -136,8 +141,11 @@ public class FactorCollection {
         public double[] remove_value(double[] arr, int value_indx) {
             int newSize = arr.length-1;
             double[] newArr = new double[newSize];
+            int c_n = 0;
             int i = 0;
+
             while (i != value_indx) {
+
                 newArr[i] = arr[i];
                 i++;
             }

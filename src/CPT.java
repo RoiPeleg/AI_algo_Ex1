@@ -182,10 +182,11 @@ public class CPT {
             for(int i = 1; i < this.CPT_values.length; i++) {
                 for(int j = 0; j < this.CPT_values[0].length; j++) {
                     if (CPT_values[0][j] == Q.charAt(0) || indexVal(evidence[0], CPT_values[0][j]) != -1) {
-                        combToCompare[comb_count] = CPT_values[i][j];
+                        if (comb_count < combToCompare.length) combToCompare[comb_count] = CPT_values[i][j];
                         comb_count++;
                     }
                 }
+                comb_count = 0;
                 if(Arrays.equals(comb,combToCompare)) {
                     String p = String.format("%.5g", CPT_prob[i - 1]);
                     return p+",0,0";
