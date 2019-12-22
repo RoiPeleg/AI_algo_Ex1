@@ -173,7 +173,7 @@ public class VariableElimination {
         for (int i = 0; i < c.length; i++) {
             if (c[i] == 0) continue;
             sum += c[i];
-            numOfAdd++;
+            if(i!=0) numOfAdd++;
         }
         for (int i = 0; i < c.length; i++) {
             c[i] = c[i] / sum;
