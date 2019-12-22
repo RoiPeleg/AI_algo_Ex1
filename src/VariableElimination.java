@@ -273,8 +273,8 @@ public class VariableElimination {
         }
 
         //if the answer to the Query is exist on the CPT (of the query variable), so we return it without calculate all the things in the algorithm.
-        // String ansCPT = NC.convertToItsNode(Q.charAt(0)).getCpt().isAnswerQuery(evidence,Q);
-        //if(ansCPT != "") return ansCPT;
+        String ansCPT = NC.convertToItsNode(Q.charAt(0)).getCpt().isAnswerQuery(evidence,Q);
+        if(ansCPT != "") return ansCPT;
 
         String[] givenOrder = query.split("\\)")[1].replaceFirst("\\,", "").split("-");
         char[] gOrder = new char[givenOrder.length];
@@ -283,13 +283,10 @@ public class VariableElimination {
         //init factors
         FactorCollection FC = new FactorCollection(NC,evidence);
 
-        for (FactorCollection.Factor F : FC.getFactor_collection()) {
-            // F.visualPrint();
-        }
-        for (int i = 0; i < NC.getNodes().length; i++) {
-            //NC.getNodes()[i].getCpt().visualPrint();
-        }
+        for(int i=0;i<FC.getSize();i++) FC.getFactor_collection().get(i).visualPrint();
+
         for(char hidden : gOrder) {
+
             //find all the factors that are factors of the hidden variable
             ArrayList<FactorCollection.Factor> H_factors = new ArrayList<FactorCollection.Factor>();
             for(FactorCollection.Factor factor : FC.getFactor_collection())
@@ -301,9 +298,8 @@ public class VariableElimination {
                 int[] index_in_H_factors = optimalOrderToJoin(H_factors, hidden);
                 int index_of_first_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[0]));
                 int index_of_second_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[1]));
-                //FC.getFactor_collection().get(index_of_first_factor).visualPrint();
-                //FC.getFactor_collection().get(index_of_second_factor).visualPrint();
                 join_factors(FC, FC.getFactor_collection().get(index_of_first_factor), FC.getFactor_collection().get(index_of_second_factor), hidden);
+
                 //update H_factors
                 FactorCollection.Factor elementToRemove = H_factors.get(index_in_H_factors[1]);
                 H_factors.remove(elementToRemove);
