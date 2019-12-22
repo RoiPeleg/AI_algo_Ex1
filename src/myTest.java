@@ -28,10 +28,13 @@ public class myTest {
         NodeCollection NC = Parser.toConstruct();
         String[] q = NC.getQueries();
         ArrayList<String>ls = new ArrayList<String>();
-        for (int i=0;i<q.length;i++)
+        /*for (int i=0;i<q.length;i++)
         {
             ls.add(VariableElimination.variableElimination(NC,q[i]));
-        }
+        }*/
+
+        ls.add(VariableElimination.variableElimination(NC,q[4]));
+
         for(int i=0; i<ls.size(); i++){
             System.out.println(ls.get(i));
         }
