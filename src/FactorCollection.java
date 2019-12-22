@@ -62,6 +62,15 @@ public class FactorCollection {
         size --;
     }
 
+    public void removeZeros(Factor f) {
+        for (int i = 0; i < f.factor_prob.length; i++) {
+            if (f.factor_prob[i] == 0.0) {
+                f.remove_row(f.factor_values, i + 1);
+                f.remove_value(f.factor_prob, i);
+            }
+        }
+    }
+
     public class Factor {
 
         //attributes
