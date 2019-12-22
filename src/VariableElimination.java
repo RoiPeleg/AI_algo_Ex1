@@ -59,6 +59,7 @@ public class VariableElimination {
             char[] comb = new char[valuesColCount];
             char[] combToCompare = new char[comb.length];
             ArrayList<Integer> treatedRows = new ArrayList<Integer>();
+
             while(shortCol < shorter.getFactor_values()[0].length) {
                 if(shortCol != indexInShort) {
                     values[0][valuesColCount] = shorter.getFactor_values()[0][shortCol];
@@ -198,11 +199,12 @@ public class VariableElimination {
         double[] c = factor.getFactor_prob();
         double sum = 0;
         for (int i = 0; i < c.length; i++) {
+            if (c[i] == 0) continue;
             sum += c[i];
+            numOfAdd++;
         }
         for (int i = 0; i < c.length; i++) {
             c[i] = c[i] / sum;
-            numOfAdd++;
         }
         factor.setFactor_prob(c);
     }
@@ -278,8 +280,14 @@ public class VariableElimination {
 
         //init factors
         FactorCollection FC = new FactorCollection(NC,evidence);
-        for(char hidden : gOrder) {
 
+        for (FactorCollection.Factor F : FC.getFactor_collection()) {
+            //F.visualPrint();
+        }
+        for (int i = 0; i < NC.getNodes().length; i++) {
+            //NC.getNodes()[i].getCpt().visualPrint();
+        }
+        for(char hidden : gOrder) {
             //find all the factors that are factors of the hidden variable
             ArrayList<FactorCollection.Factor> H_factors = new ArrayList<FactorCollection.Factor>();
             for(FactorCollection.Factor factor : FC.getFactor_collection())
@@ -291,12 +299,14 @@ public class VariableElimination {
                 int[] index_in_H_factors = optimalOrderToJoin(H_factors, hidden);
                 int index_of_first_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[0]));
                 int index_of_second_factor = FC.getFactor_collection().indexOf(H_factors.get(index_in_H_factors[1]));
+                //FC.getFactor_collection().get(index_of_first_factor).visualPrint();
+                //FC.getFactor_collection().get(index_of_second_factor).visualPrint();
                 join_factors(FC, FC.getFactor_collection().get(index_of_first_factor), FC.getFactor_collection().get(index_of_second_factor), hidden);
-
                 //update H_factors
                 FactorCollection.Factor elementToRemove = H_factors.get(index_in_H_factors[1]);
                 H_factors.remove(elementToRemove);
             }
+
             //eliminate hidden
             if (H_factors.size() != 0) {
                 int index_in_FC = FC.getFactor_collection().indexOf(H_factors.get(0)); //there is only one factor there

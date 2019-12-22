@@ -11,6 +11,9 @@ public class NodeCollection {
 
     public String[] getQueries(){return Queries;}
 
+    public Node[] getNodes() {
+        return nodes;
+    }
     //constructor
     public NodeCollection(String[] input) {
         nodes = new Node[input.length - 2];

@@ -97,7 +97,7 @@ public class FactorCollection {
             this.factor_prob = T.copyToFactorProb();
             //if there are evidence variables in CPT, so we need to remove some rows from it
             int count_evidence = T.countEvidence(evidence);
-            if(count_evidence != 0)
+            if (count_evidence != 0) {
                 for (int i = 0; i < evidence[0].length; i++)
                     for (int j = 0; j < T.getCPT_values()[0].length; j++)
                         if (evidence[0][i] == T.getCPT_values()[0][j]) {
@@ -105,12 +105,13 @@ public class FactorCollection {
                             for (int k = 1; k < T.getCPT_values().length; k++) {
                                 if (T.getCPT_values()[k][j] != evidence[1][i]) { //so we need to remove this row from the factor
                                     this.factor_values = remove_row(this.factor_values, factor_count);
-                                    this.factor_prob = remove_value(this.factor_prob, factor_count-1);
-                                    factor_count --;
+                                    this.factor_prob = remove_value(this.factor_prob, factor_count - 1);
+                                    factor_count--;
                                 }
-                                factor_count ++;
+                                factor_count++;
                             }
                         }
+            }
             if(count_evidence != 0) { //the factor contains evidence
                 this.factor_values = remove_evidence_col(this.factor_values, evidence, count_evidence);
             }
@@ -119,6 +120,7 @@ public class FactorCollection {
             for(int i=0; i<variables_count; i++) {
                 this.factorOf.add(NC.convertToItsNode(factor_values[0][i]));
             }
+
         }
 
         public Factor(char[][] values, double[] prob) {
@@ -131,7 +133,7 @@ public class FactorCollection {
         }
 
         // Auxiliary functions for the constructor
-        private double[] remove_value(double[] arr, int value_indx) {
+        public double[] remove_value(double[] arr, int value_indx) {
             int newSize = arr.length-1;
             double[] newArr = new double[newSize];
             int i = 0;
@@ -150,7 +152,7 @@ public class FactorCollection {
             return newArr;
         }
 
-        private char[][] remove_row(char[][] table, int row_indx) {
+        public char[][] remove_row(char[][] table, int row_indx) {
             int newSizeRow = table.length-1;
             int colSize = table[0].length;
             char[][] newTable = new char[newSizeRow][colSize];
@@ -176,15 +178,25 @@ public class FactorCollection {
         private char[][] remove_evidence_col(char[][] table, char[][] evidence, int count_evidence) {
             char[][] newTable = new char[table.length][table[0].length - count_evidence];
             int newTable_count = 0; //counter for number of columns we already define in the new table.
-            for(int i=0; i<evidence[0].length; i++) {
+            /*for(int i=0; i<evidence[0].length; i++) {
                 if(containsVal(table[0], evidence[0][i])) {
+                    System.out.println(evidence[0][i]);
                     for (int j = 0; j < newTable[0].length; j++) {
                         if(table[0][j] != evidence[0][i]) //so we need to copy this column to the result (left it)
-                            for(int k=0; k<newTable.length; k++)
+                            for(int k=0; k<newTable.length; k++) {
+                                System.out.println(table[k][j]);
                                 newTable[k][newTable_count] = table[k][j];
+                            }
                         newTable_count ++;
                     }
                 }
+            }*/
+            for (int i = 0; i < table[0].length; i++) {
+                if (containsVal(evidence[0], table[0][i])) continue;
+                for (int j = 0; j < newTable.length; j++) {
+                    newTable[j][newTable_count] = table[j][i];
+                }
+                newTable_count++;
             }
             return newTable;
         }
